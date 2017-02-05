@@ -14,9 +14,16 @@ public class BoardManager : MonoBehaviour {
 	public GameObject BearSprite;
 	public GameObject TurtleSprite;
 
+	public GameObject pointer;
+
+	public GameObject cell;
+
 	private GameObject[] spriteList;
 
-	private int[,] board;
+	private GameObject[,] board;
+
+	public int columns = 9;
+	public int rows = 9;
 
 	private float boardWidth;
 	private float boardHeight;
@@ -33,7 +40,13 @@ public class BoardManager : MonoBehaviour {
 	private float leftOffset;
 	private float topOffset;
 
+	private GameObject selectedCell;
+
+	private int pointerCol;
+	private int pointerRow;
+
 	void Awake () {
+		
 
 		spriteList = new GameObject[9];
 		spriteList [0] = GiraffeSprite;
@@ -46,7 +59,7 @@ public class BoardManager : MonoBehaviour {
 		spriteList [7] = BearSprite;
 		spriteList [8] = TurtleSprite;
 
-		board = RandomAssBoard ();
+		board = new GameObject[rows, columns];
 
 		spriteScale = GiraffeSprite.transform.localScale.x;
 		spacing = Spacing * spriteScale;
@@ -62,24 +75,64 @@ public class BoardManager : MonoBehaviour {
 
 		DisplayBoard ();
 	}
-
+		
 	void DisplayBoard () {
-		int val;
 		float x, y;
 		for (int c = 0; c < 9; c++) {
 			for (int r = 0; r < 9; r++) {
-				val = board [r, c];
-				if (val != 0) {
-					x = leftBound + c * (spriteWidth + spacing) + (spriteWidth / 2f);
-					y = upperBound + r * (spriteHeight + spacing) + (spriteHeight / 2f);
-					Instantiate (spriteList [val - 1],
-								 new Vector3 (x, y, -1f),
-								 Quaternion.identity);
-				}
+				x = leftBound + c * (spriteWidth + spacing) + (spriteWidth / 2f);
+				y = upperBound + r * (spriteHeight + spacing) + (spriteHeight / 2f);
+				GameObject instance = Instantiate (cell,
+							 new Vector3 (x, y, -1f),
+							 Quaternion.identity);
+				board [r, c] = instance;
 			}
 		}
+		Select (0, 0);
 	}
 
+
+
+		
+	private void Select(int row, int col){
+		if (row < 0 || row >= rows || col < 0 || col >= columns)
+			return;
+
+		//deselect current cell
+		if (selectedCell)
+			selectedCell.GetComponent<Cell>().Selected = false; 
+
+		//keep track of selected cell in board manager
+		selectedCell = board [row, col];
+
+		//set selected flag for sprite display purposes
+		selectedCell.GetComponent<Cell>().Selected = true; 
+
+		//reset location of the pointer
+		pointer.transform.position = selectedCell.transform.position;
+		pointerCol = col;
+		pointerRow = row;
+	}
+
+	void Update(){
+		//moving the selector. 
+		if (Input.GetKeyDown (KeyCode.DownArrow)) {
+			Select (pointerRow - 1, pointerCol);
+		}
+		else if (Input.GetKeyDown (KeyCode.UpArrow)) {
+			Select (pointerRow + 1, pointerCol);
+		}
+		else if (Input.GetKeyDown (KeyCode.LeftArrow)) {
+			Select (pointerRow, pointerCol - 1);
+		}
+		else if (Input.GetKeyDown (KeyCode.RightArrow)) {
+			Select (pointerRow, pointerCol + 1);
+		}
+
+	}
+
+
+	/*
 	int[,] RandomAssBoard () {
 		int[,] newBoard = { { 0, 0, 0, 0, 0, 0, 9, 2, 6 },
 							{ 2, 6, 0, 9, 1, 0, 5, 0, 0 },
@@ -91,5 +144,5 @@ public class BoardManager : MonoBehaviour {
 							{ 0, 0, 2, 0, 9, 6, 0, 3, 5 },
 							{ 3, 8, 6, 0, 0, 0, 0, 0, 0 } };
 		return newBoard;
-	}
+	}*/
 }
