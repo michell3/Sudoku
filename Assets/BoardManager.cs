@@ -4,9 +4,6 @@ using UnityEngine;
 
 public class BoardManager : MonoBehaviour {
 
-//	public SpriteSize;
-//	public Offset;
-
 	public GameObject GiraffeSprite;
 	public GameObject FlamingoSprite;
 	public GameObject SeahorseSprite;
@@ -29,9 +26,12 @@ public class BoardManager : MonoBehaviour {
 	private float spriteHeight;
 	private float spriteScale;
 
-	private float spacing = .8f;
-	private float leftOffset = 1.2f;
-	private float topOffset = 1.2f;
+	public float Spacing = .8f;
+	public float LeftOffset = 1.2f;
+	public float TopOffset = 1.2f;
+	private float spacing;
+	private float leftOffset;
+	private float topOffset;
 
 	void Awake () {
 
@@ -49,9 +49,9 @@ public class BoardManager : MonoBehaviour {
 		board = RandomAssBoard ();
 
 		spriteScale = GiraffeSprite.transform.localScale.x;
-		spacing *= spriteScale;
-		leftOffset *= spriteScale;
-		topOffset *= spriteScale;
+		spacing = Spacing * spriteScale;
+		leftOffset = LeftOffset * spriteScale;
+		topOffset = TopOffset * spriteScale;
 
 		boardWidth = GetComponent<SpriteRenderer>().bounds.size.x;
 		boardHeight = GetComponent<SpriteRenderer>().bounds.size.y;
