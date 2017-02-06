@@ -3,27 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class BoardManager : MonoBehaviour {
-
-	public GameObject GiraffeSprite;
-	public GameObject FlamingoSprite;
-	public GameObject SeahorseSprite;
-	public GameObject ElephantSprite;
-	public GameObject SnakeSprite;
-	public GameObject SealSprite;
-	public GameObject FoxSprite;
-	public GameObject BearSprite;
-	public GameObject TurtleSprite;
-
+	//for the purposes of sizing
+	public GameObject sampleSprite;
 	public GameObject pointer;
-
 	public GameObject cell;
-
-	private GameObject[] spriteList;
 
 	private GameObject[,] board;
 
 	public int columns = 9;
 	public int rows = 9;
+
+	public bool isP1 = true;
 
 	private float boardWidth;
 	private float boardHeight;
@@ -45,23 +35,38 @@ public class BoardManager : MonoBehaviour {
 	private int pointerCol;
 	private int pointerRow;
 
+	private int pointerNum;
+
+	private Dictionary<string, KeyCode> controls;
+
+
+	//Define different controls for different players
+	Dictionary<string, KeyCode> p1Controls = 
+		new Dictionary<string, KeyCode> () {
+		{"up", KeyCode.UpArrow},
+		{"down", KeyCode.DownArrow},
+		{"left", KeyCode.LeftArrow},
+		{"right", KeyCode.RightArrow},
+		{"place", KeyCode.Space},
+		{"chooseUp", KeyCode.N},
+		{"chooseDown", KeyCode.B}
+		};
+
+	Dictionary<string, KeyCode> p2Controls = 
+		new Dictionary<string, KeyCode> () {
+		{"up", KeyCode.W},
+		{"down", KeyCode.S},
+		{"left", KeyCode.A},
+		{"right", KeyCode.D},
+		{"place", KeyCode.R},
+		{"chooseUp", KeyCode.Y},
+		{"chooseDown", KeyCode.T}
+	};
+
 	void Awake () {
-		
-
-		spriteList = new GameObject[9];
-		spriteList [0] = GiraffeSprite;
-		spriteList [1] = FlamingoSprite;
-		spriteList [2] = SeahorseSprite;
-		spriteList [3] = ElephantSprite;
-		spriteList [4] = SnakeSprite;
-		spriteList [5] = SealSprite;
-		spriteList [6] = FoxSprite;
-		spriteList [7] = BearSprite;
-		spriteList [8] = TurtleSprite;
-
 		board = new GameObject[rows, columns];
 
-		spriteScale = GiraffeSprite.transform.localScale.x;
+		spriteScale = sampleSprite.transform.localScale.x;
 		spacing = Spacing * spriteScale;
 		leftOffset = LeftOffset * spriteScale;
 		topOffset = TopOffset * spriteScale;
@@ -70,10 +75,15 @@ public class BoardManager : MonoBehaviour {
 		boardHeight = GetComponent<SpriteRenderer>().bounds.size.y;
 		leftBound = leftOffset + transform.position.x - (boardWidth / 2f);
 		upperBound = topOffset + transform.position.y - (boardHeight / 2f);
-		spriteWidth = GiraffeSprite.GetComponent<SpriteRenderer>().bounds.size.x;
-		spriteHeight = GiraffeSprite.GetComponent<SpriteRenderer>().bounds.size.y;
+		spriteWidth = sampleSprite.GetComponent<SpriteRenderer>().bounds.size.x;
+		spriteHeight = sampleSprite.GetComponent<SpriteRenderer>().bounds.size.y;
 
 		DisplayBoard ();
+
+		if (isP1)
+			controls = p1Controls;
+		else
+			controls = p2Controls;
 	}
 		
 	void DisplayBoard () {
@@ -89,6 +99,7 @@ public class BoardManager : MonoBehaviour {
 			}
 		}
 		Select (0, 0);
+		pointerNum = 0;
 	}
 
 
@@ -116,18 +127,45 @@ public class BoardManager : MonoBehaviour {
 
 	void Update(){
 		//moving the selector. 
-		if (Input.GetKeyDown (KeyCode.DownArrow)) {
+		if (Input.GetKeyDown (controls["down"])) {
 			Select (pointerRow - 1, pointerCol);
 		}
-		else if (Input.GetKeyDown (KeyCode.UpArrow)) {
+		else if (Input.GetKeyDown (controls["up"])) {
 			Select (pointerRow + 1, pointerCol);
 		}
-		else if (Input.GetKeyDown (KeyCode.LeftArrow)) {
+		else if (Input.GetKeyDown (controls["left"])) {
 			Select (pointerRow, pointerCol - 1);
 		}
-		else if (Input.GetKeyDown (KeyCode.RightArrow)) {
+		else if (Input.GetKeyDown (controls["right"])) {
 			Select (pointerRow, pointerCol + 1);
 		}
+
+		if (Input.GetKeyDown (controls["place"])) {
+			Place ();
+		} 
+		else if (Input.GetKeyDown(controls["chooseDown"])) {
+			//make sure to wrap around # of rows/columns, then add 1 since
+			//we are 1-indexing
+			pointerNum = ((rows + pointerNum - 1) % rows); 
+			Debug.Log (pointerNum);
+		}
+		else if (Input.GetKeyDown (controls["chooseUp"])) {
+			//make sure to wrap around # of rows/columns, then add 1 since
+			//we are 1-indexing
+			pointerNum = ((rows + pointerNum + 1) % rows); 
+		}
+
+	}
+
+	private void Place(){
+		//if incorrect 
+
+
+		//if correct 
+		selectedCell.GetComponent<Cell> ().Val = pointerNum;
+
+
+		//timer logic
 
 	}
 

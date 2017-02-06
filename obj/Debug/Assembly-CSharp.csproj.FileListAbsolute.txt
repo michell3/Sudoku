@@ -27,3 +27,7 @@ C:\Users\Poob\Documents\Sudoku\Temp\bin\Debug\UnityEngine.VR.xml
 C:\Users\Poob\Documents\Sudoku\obj\Debug\Assembly-CSharp.csprojResolveAssemblyReference.cache
 C:\Users\Poob\Documents\Sudoku\obj\Debug\Assembly-CSharp.dll
 C:\Users\Poob\Documents\Sudoku\obj\Debug\Assembly-CSharp.pdb
+C:\Users\Poob\Documents\Sudoku\Temp\bin\Debug\UnityEngine.Advertisements.dll
+C:\Users\Poob\Documents\Sudoku\Temp\bin\Debug\UnityEngine.Purchasing.dll
+C:\Users\Poob\Documents\Sudoku\Temp\bin\Debug\UnityEngine.Advertisements.xml
+C:\Users\Poob\Documents\Sudoku\Temp\bin\Debug\UnityEngine.Purchasing.xml
