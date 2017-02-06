@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class BoardManager : MonoBehaviour {
 	//for the purposes of sizing
@@ -8,12 +9,20 @@ public class BoardManager : MonoBehaviour {
 	public GameObject pointer;
 	public GameObject cell;
 
+	public Image image; // timer bar
+	public Image image2; // powerup bar
+	public float timeSpeed = 30.0f; // to adjust the speed of countdown timer
+	public bool increment;
+	public bool decrement;
+
 	private GameObject[,] board;
 
 	public int columns = 9;
 	public int rows = 9;
 
 	public bool isP1 = true;
+
+	private bool powerup = false; // use to see if powerup bar is filled
 
 	private float boardWidth;
 	private float boardHeight;
@@ -126,6 +135,9 @@ public class BoardManager : MonoBehaviour {
 	}
 
 	void Update(){
+		//if the battle starts
+		Timer();
+
 		//moving the selector. 
 		if (Input.GetKeyDown (controls["down"])) {
 			Select (pointerRow - 1, pointerCol);
@@ -155,6 +167,23 @@ public class BoardManager : MonoBehaviour {
 			pointerNum = ((rows + pointerNum + 1) % rows); 
 		}
 
+
+
+	}
+		
+
+	private void Timer(){
+		if (increment == true) {
+		
+			image.fillAmount -= 1.0f / timeSpeed * Time.deltaTime;
+
+			if (image.fillAmount == 0) {
+				image.fillAmount = 1;
+			}
+		}
+
+
+
 	}
 
 	private void Place(){
@@ -163,8 +192,14 @@ public class BoardManager : MonoBehaviour {
 
 		//if correct 
 		selectedCell.GetComponent<Cell> ().Val = pointerNum;
-
-
+		if (decrement == true) {
+			image2.fillAmount = image2.fillAmount + image.fillAmount;
+			if (image2.fillAmount == 1) {
+				image2.fillAmount = 0;
+				powerup = true;
+			}
+			image.fillAmount = 1;
+		}
 		//timer logic
 
 	}
