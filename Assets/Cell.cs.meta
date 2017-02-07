@@ -1,10 +1,12 @@
 fileFormatVersion: 2
 guid: a0f300005de44234e81ca9123eabb394
-timeCreated: 1486335095
+timeCreated: 1486418322
 licenseType: Free
 MonoImporter:
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - gridLockPrefab: {fileID: 1368688469789476, guid: 67114840bc1924db59ceb63bbcef8eba,
+      type: 2}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

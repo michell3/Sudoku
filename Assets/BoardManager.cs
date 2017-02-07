@@ -8,6 +8,8 @@ public class BoardManager : MonoBehaviour {
 	public GameObject pointer;
 	public GameObject cell;
 
+	public GameObject lockPrefab;
+	public List<GameObject> lockList = new List<GameObject>();
 	private GameObject[,] board;
 
 	public int columns = 9;
@@ -37,6 +39,9 @@ public class BoardManager : MonoBehaviour {
 
 	private int pointerNum;
 
+
+	private float time = 10;
+
 	private Dictionary<string, KeyCode> controls;
 
 
@@ -49,7 +54,8 @@ public class BoardManager : MonoBehaviour {
 		{"right", KeyCode.RightArrow},
 		{"place", KeyCode.Space},
 		{"chooseUp", KeyCode.N},
-		{"chooseDown", KeyCode.B}
+		{"chooseDown", KeyCode.B},
+		{"lock",KeyCode.T}
 		};
 
 	Dictionary<string, KeyCode> p2Controls = 
@@ -60,7 +66,8 @@ public class BoardManager : MonoBehaviour {
 		{"right", KeyCode.D},
 		{"place", KeyCode.R},
 		{"chooseUp", KeyCode.Y},
-		{"chooseDown", KeyCode.T}
+		{"chooseDown", KeyCode.T},
+		{"lock",KeyCode.Y}
 	};
 
 	void Awake () {
@@ -155,14 +162,62 @@ public class BoardManager : MonoBehaviour {
 			pointerNum = ((rows + pointerNum + 1) % rows); 
 		}
 
+		if (Input.GetKeyDown (controls["lock"])) {
+			lockGridCell ();
+		}
+
+
+		//REMEMBER TO DELETE THIS
+		if(Input.GetKeyDown(KeyCode.G))
+			unlockGridCell();
+
+		print (time -= Time.deltaTime);
+
 	}
 
+	// locks the grid cell that is selected
+	private void lockGridCell()
+	{
+		selectedCell.GetComponent<Cell> ().Locked = true;
+		GameObject gridLock = Instantiate (lockPrefab);
+		gridLock.transform.position = selectedCell.GetComponent<Cell> ().transform.position;
+		lockList.Add (gridLock);
+	}
+
+	// unlocks the grid cell that is selected if it is locked
+	private void unlockGridCell()
+	{
+		selectedCell.GetComponent<Cell> ().Locked = false;
+		foreach( GameObject Lock in lockList)
+		{
+			if (Lock.transform.position == selectedCell.GetComponent<Cell> ().transform.position)
+			{
+				lockList.Remove (Lock);
+				Destroy (Lock);
+			}
+		}
+	}
+
+	// makes a cell not visible when opponent gets squid ink ability
+
+
+
 	private void Place(){
-		//if incorrect 
-
-
-		//if correct 
-		selectedCell.GetComponent<Cell> ().Val = pointerNum;
+		//if placement is correct and cell isn't locked 
+		if (!selectedCell.GetComponent<Cell> ().Locked)
+		{
+			selectedCell.GetComponent<Cell> ().Val = pointerNum;
+		}
+		//if you try to place something in a locked grid 
+		else if (selectedCell.GetComponent<Cell> ().Locked) 
+		{
+			//some interaction that lets the user know they can't do this
+		}
+		//if placement is incorrect and cell is unlocked
+		else
+		{
+			lockGridCell ();
+		}
 
 
 		//timer logic
