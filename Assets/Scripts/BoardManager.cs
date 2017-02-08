@@ -49,6 +49,7 @@ public class BoardManager : MonoBehaviour {
 	private int pointerRow;
 
 	private int pointerNum;
+	public GameObject numberBar;
 
 	private int randomRow;
 	private int randomCol;
@@ -191,12 +192,12 @@ public class BoardManager : MonoBehaviour {
 			} else if (Input.GetKeyDown (controls ["chooseDown"])) {
 				//make sure to wrap around # of rows/columns, then add 1 since
 				//we are 1-indexing
-				pointerNum = ((rows + pointerNum - 1) % rows); 
-				Debug.Log (pointerNum);
+				choosePointerNum(-1);
+
 			} else if (Input.GetKeyDown (controls ["chooseUp"])) {
 				//make sure to wrap around # of rows/columns, then add 1 since
 				//we are 1-indexing
-				pointerNum = ((rows + pointerNum + 1) % rows); 
+				choosePointerNum(1);
 			}
 
 
@@ -223,6 +224,34 @@ public class BoardManager : MonoBehaviour {
 			if (stunTime < 0)
 				stunned = false;
 		}
+	}
+
+	private void choosePointerNum(int move){
+
+
+		selectSprite (false); // deselect current sprite
+		pointerNum = ((rows + pointerNum + move) % rows); 
+		selectSprite(true); // select new sprite
+	
+	}
+
+	private void selectSprite(bool select){
+		GameObject temp; 
+		Color newColor;
+
+		if (select)
+			newColor = Color.white;
+		else
+			newColor = new Color (0.24f, 0.21f, 0.18f, 0.42f);
+
+		temp = numberBar.transform.GetChild(pointerNum).gameObject;
+		temp.GetComponent<SpriteRenderer> ().color = newColor;
+
+		//get the selected box child of the sprite and then activate/deactivate it
+		temp.transform.GetChild(0).gameObject.SetActive(select);
+			
+		
+		
 	}
 
 
@@ -345,7 +374,7 @@ public class BoardManager : MonoBehaviour {
 
 	private void Place(){
 		//if placement is correct and cell isn't locked 
-
+	
 		if (!selectedCell.GetComponent<Cell> ().Locked &&
 			 selectedCell.GetComponent<Cell> ().Val < 0)
 		{
