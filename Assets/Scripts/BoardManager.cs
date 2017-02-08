@@ -61,6 +61,8 @@ public class BoardManager : MonoBehaviour {
 
 	private Dictionary<string, KeyCode> controls;
 
+	private int[,] answer, show;
+
 
 	//Define different controls for different players
 	Dictionary<string, KeyCode> p1Controls = 
@@ -108,6 +110,8 @@ public class BoardManager : MonoBehaviour {
 			controls = p1Controls;
 		else
 			controls = p2Controls;
+
+
 	}
 
 	void DisplayBoard () {
@@ -124,6 +128,20 @@ public class BoardManager : MonoBehaviour {
 		}
 		Select (0, 0);
 		pointerNum = 0;
+
+		//hardcoded to only get dummy board, can change later 
+		answer = RefBoard.getAnswerBoard(1);
+		show = RefBoard.getShowBoard (1);
+
+
+		for (int c = 0; c < 9; c++) {
+			for (int r = 0; r < 9; r++) {
+				if (show [r, c] == 1) {
+					board [r, c].GetComponent<Cell> ().Val = answer [r, c] - 1;
+				}
+			}
+		}
+		Debug.Log (board [0, 0].GetComponent<Cell> ().Val);
 	}
 
 
@@ -302,7 +320,9 @@ public class BoardManager : MonoBehaviour {
 
 	private void Place(){
 		//if placement is correct and cell isn't locked 
-		if (!selectedCell.GetComponent<Cell> ().Locked)
+
+		if (!selectedCell.GetComponent<Cell> ().Locked &&
+			 selectedCell.GetComponent<Cell> ().Val < 0)
 		{
 			selectedCell.GetComponent<Cell> ().Val = pointerNum;
 			if (decrement == true) {
@@ -328,6 +348,7 @@ public class BoardManager : MonoBehaviour {
 		//timer logic
 
 	}
+
 
 
 	/*
