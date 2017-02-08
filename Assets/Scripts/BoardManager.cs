@@ -199,10 +199,13 @@ public class BoardManager : MonoBehaviour {
 			//REMEMBER TO DELETE THIS
 			if (Input.GetKeyDown (KeyCode.G)) {
 				//PowerUp ();
-				LockGridCell();
+				//LockGridCell();
 				//SquidInk();
+				LionScare();
 			}
-		} else {
+		} 
+		else
+		{
 			stunTime -= Time.deltaTime;
 			if (stunTime < 0)
 				stunned = false;
@@ -238,12 +241,7 @@ public class BoardManager : MonoBehaviour {
 	}
 
 	//checks to see whether all of the cells are locked/filled with an animal or not
-<<<<<<< HEAD
-	private int openGrid()
-	{
-=======
-	private bool openGrid() {
->>>>>>> 12001057384a4bb0fbb65a9273bf3c60ea91afd2
+	private int openGrid() {
 		int openCells = 0;
 		for(int r = 0; r < 9; r++){
 			for(int c = 0; c < 9; c++){
@@ -256,14 +254,9 @@ public class BoardManager : MonoBehaviour {
 	}
 
 	// locks the grid cell that is selected
-<<<<<<< HEAD
 	private void LockGridCell()
 	{
 		if (openGrid () != 0) {
-=======
-	private void LockGridCell() {
-		if (openGrid ()) {
->>>>>>> 12001057384a4bb0fbb65a9273bf3c60ea91afd2
 			randomRow = Random.Range (0, 9);
 			randomCol = Random.Range (0, 9);
 			while (board [randomRow, randomCol].GetComponent<Cell> ().Locked ||
@@ -315,7 +308,6 @@ public class BoardManager : MonoBehaviour {
 
 	// a lion runs across a certain row and scares off all the animals from that row
 	//MAKE IT SO THAT THE SPRITES ON THE POSITIONS ARE DESTROYED
-<<<<<<< HEAD
 	private void LionScare()
 	{
 		if (openGrid () < 5)
@@ -331,26 +323,13 @@ public class BoardManager : MonoBehaviour {
 				randomCol = Random.Range (0, 9);
 			}
 			board [randomRow, randomCol].GetComponent<Cell> ().Val = -1;
-			foreach (GameObject sprite in board[randomRow,randomCol].GetComponent<Cell>().childList) {
-				//Destroy (sprite);
-				board [randomRow, randomCol].GetComponent<Cell> ().childList.Remove (sprite);
-=======
-	private void LionScare() {
-		print ("Lion Scare");
-		randomRow = Random.Range (0, 9);
-		for (int c = 0; c < 9; c++) {
-			board [randomRow, c].GetComponent<Cell> ().Val = -1;
-			foreach (GameObject sprite in board[randomRow,c].GetComponent<Cell>().childList)
+			foreach (GameObject sprite in board[randomRow,randomCol].GetComponent<Cell>().childList) 
 			{
->>>>>>> 12001057384a4bb0fbb65a9273bf3c60ea91afd2
 				Destroy (sprite);
+				board [randomRow, randomCol].GetComponent<Cell> ().childList.Remove (sprite);
+				lionScareCount -= 1;
 			}
-			lionScareCount -= 1;
 		}
-
-
-
-
 	}
 
 
