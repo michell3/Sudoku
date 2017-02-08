@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class BoardManager : MonoBehaviour {
+	
 	//for the purposes of sizing
 	public GameObject sampleSprite;
 	public GameObject pointer;
@@ -16,7 +17,6 @@ public class BoardManager : MonoBehaviour {
 	public float timeSpeed = 30.0f; // to adjust the speed of countdown timer
 	public bool increment;
 	public bool decrement;
-	public float bonus = 0.20f; // to adjust the amount to bonus energy
 
 	private GameObject[,] board;
 
@@ -25,7 +25,7 @@ public class BoardManager : MonoBehaviour {
 
 	public bool isP1 = true;
 
-	//private bool powerup = false; // use to see if powerup bar is filled
+	private bool powerup = false; // use to see if powerup bar is filled
 
 	private float boardWidth;
 	private float boardHeight;
@@ -109,8 +109,6 @@ public class BoardManager : MonoBehaviour {
 			controls = p1Controls;
 		else
 			controls = p2Controls;
-
-
 	}
 
 	void DisplayBoard () {
@@ -142,9 +140,6 @@ public class BoardManager : MonoBehaviour {
 		}
 		Debug.Log (board [0, 0].GetComponent<Cell> ().Val);
 	}
-
-
-
 
 	private void Select(int row, int col){
 		if (row < 0 || row >= rows || col < 0 || col >= columns)
@@ -200,30 +195,15 @@ public class BoardManager : MonoBehaviour {
 				pointerNum = ((rows + pointerNum + 1) % rows); 
 			}
 
-
 			if (Input.GetKeyDown (controls ["lock"])) {
 				LockGridCell ();
 			}
-
-
+				
 			//REMEMBER TO DELETE THIS
 			if (Input.GetKeyDown (KeyCode.G))
 				//PowerUp ();
 				LockGridCell();
 			//SquidInk();
-
-			if (Input.GetKeyDown (KeyCode.H))
-				//PowerUp ();
-				UnlockGridCell();
-
-				//LockGridCell();
-				SquidInk();
-
-			if (Input.GetKeyDown (KeyCode.H))
-				//PowerUp ();
-				//UnlockGridCell();
-				LionScare();
-			
 		} 
 		else 
 		{
@@ -232,17 +212,6 @@ public class BoardManager : MonoBehaviour {
 				stunned = false;
 		}
 	}
-
-	// locks the grid cell that is selected
-	private void LockGridCell()
-	{
-		randomRow = Random.Range (0, 9);
-		randomCol = Random.Range (0, 9);
-		while (board [randomRow, randomCol].GetComponent<Cell> ().Locked ||
-			board [randomRow, randomCol].GetComponent<Cell> ().Val != -1) 
-		{
-
-
 
 	//checks to see whether all of the cells are locked/filled with an animal or not
 	private bool openGrid()
@@ -259,7 +228,6 @@ public class BoardManager : MonoBehaviour {
 		else
 			return false;
 	}
-
 
 	// locks the grid cell that is selected
 	private void LockGridCell()
