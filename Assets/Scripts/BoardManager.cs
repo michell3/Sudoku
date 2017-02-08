@@ -12,12 +12,11 @@ public class BoardManager : MonoBehaviour {
 	public GameObject inkPrefab;
 	public List<GameObject> lockList = new List<GameObject>();
 
-	public Image image; // timer bar
-	public Image image2; // powerup bar
+	public Image image; // timer
 	public float timeSpeed = 30.0f; // to adjust the speed of countdown timer
 	public bool increment;
 	public bool decrement;
-
+	public float bonus = 0.20f; // to adjust the amount to bonus energy
 
 	private GameObject[,] board;
 
@@ -26,7 +25,7 @@ public class BoardManager : MonoBehaviour {
 
 	public bool isP1 = true;
 
-	private bool powerup = false; // use to see if powerup bar is filled
+	//private bool powerup = false; // use to see if powerup bar is filled
 
 	private float boardWidth;
 	private float boardHeight;
@@ -150,8 +149,10 @@ public class BoardManager : MonoBehaviour {
 	}
 
 	void Update(){
-		//if the battle starts
-		Timer ();
+		if (decrement == true) {
+			image.fillAmount -= 1.0f / timeSpeed * Time.deltaTime;
+		}
+
 		if (!stunned) {
 			//moving the selector. 
 			if (Input.GetKeyDown (controls ["down"])) {
@@ -191,12 +192,12 @@ public class BoardManager : MonoBehaviour {
 			if (Input.GetKeyDown (KeyCode.G))
 				//PowerUp ();
 				LockGridCell();
-				//SquidInk();
+			//SquidInk();
 
 			if (Input.GetKeyDown (KeyCode.H))
 				//PowerUp ();
 				UnlockGridCell();
-			
+
 		} 
 		else 
 		{
@@ -206,25 +207,13 @@ public class BoardManager : MonoBehaviour {
 		}
 	}
 
-
-	private void Timer(){
-		if (increment == true) {
-
-			image.fillAmount -= 1.0f / timeSpeed * Time.deltaTime;
-
-			if (image.fillAmount == 0) {
-				image.fillAmount = 1;
-			}
-		}
-	}
-
 	// locks the grid cell that is selected
 	private void LockGridCell()
 	{
 		randomRow = Random.Range (0, 9);
 		randomCol = Random.Range (0, 9);
 		while (board [randomRow, randomCol].GetComponent<Cell> ().Locked ||
-		       board [randomRow, randomCol].GetComponent<Cell> ().Val != -1) 
+			board [randomRow, randomCol].GetComponent<Cell> ().Val != -1) 
 		{
 			randomRow = Random.Range (0, 9);
 			randomCol = Random.Range (0, 9);
@@ -305,13 +294,13 @@ public class BoardManager : MonoBehaviour {
 		if (!selectedCell.GetComponent<Cell> ().Locked)
 		{
 			selectedCell.GetComponent<Cell> ().Val = pointerNum;
-			if (decrement == true) {
-				image2.fillAmount = image2.fillAmount + image.fillAmount;
-				if (image2.fillAmount == 1) {
-					image2.fillAmount = 0;
-					powerup = true;
+
+			if (increment == true) {
+				image.fillAmount = image.fillAmount + 0.20f;
+				if (image.fillAmount == 1) {
+					image.fillAmount = 0;
+					//powerup = true;
 				}
-				image.fillAmount = 1;
 			}
 		}
 		//if you try to place something in a locked grid 
