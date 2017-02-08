@@ -190,12 +190,13 @@ public class BoardManager : MonoBehaviour {
 			//REMEMBER TO DELETE THIS
 			if (Input.GetKeyDown (KeyCode.G))
 				//PowerUp ();
-				LockGridCell();
-				//SquidInk();
+				//LockGridCell();
+				SquidInk();
 
 			if (Input.GetKeyDown (KeyCode.H))
 				//PowerUp ();
-				UnlockGridCell();
+				//UnlockGridCell();
+				LionScare();
 			
 		} 
 		else 
@@ -218,16 +219,35 @@ public class BoardManager : MonoBehaviour {
 		}
 	}
 
+
+	//checks to see whether all of the cells are locked/filled with an animal or not
+	private bool openGrid()
+	{
+		int openCells = 0;
+		for(int r = 0; r < 9; r++){
+			for(int c = 0; c < 9; c++){
+				if(board[r,c].GetComponent<Cell>().Val == -1 && board[r,c].GetComponent<Cell>().Locked == false)
+					openCells += 1;
+			}
+		}
+		if(openCells > 0)
+			return true;
+		else
+			return false;
+	}
+
+
 	// locks the grid cell that is selected
 	private void LockGridCell()
 	{
-		randomRow = Random.Range (0, 9);
-		randomCol = Random.Range (0, 9);
-		while (board [randomRow, randomCol].GetComponent<Cell> ().Locked ||
-		       board [randomRow, randomCol].GetComponent<Cell> ().Val != -1) 
-		{
+		if (openGrid ()) {
 			randomRow = Random.Range (0, 9);
 			randomCol = Random.Range (0, 9);
+			while (board [randomRow, randomCol].GetComponent<Cell> ().Locked ||
+			      board [randomRow, randomCol].GetComponent<Cell> ().Val != -1) {
+				randomRow = Random.Range (0, 9);
+				randomCol = Random.Range (0, 9);
+			}
 		}
 		board [randomRow, randomCol].GetComponent<Cell> ().Locked = true;
 		GameObject gridLock = Instantiate (lockPrefab);
@@ -279,6 +299,11 @@ public class BoardManager : MonoBehaviour {
 		randomRow = Random.Range (0, 9);
 		for (int c = 0; c < 9; c++) {
 			board [randomRow, c].GetComponent<Cell> ().Val = -1;
+			foreach (GameObject sprite in board[randomRow,c].GetComponent<Cell>().childList)
+			{
+				Destroy (sprite);
+				board [randomRow, c].GetComponent<Cell> ().childList.Remove (sprite);
+			}
 		}
 	}
 
