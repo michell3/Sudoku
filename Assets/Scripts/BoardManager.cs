@@ -60,6 +60,8 @@ public class BoardManager : MonoBehaviour {
 
 	private Dictionary<string, KeyCode> controls;
 
+	private int[,] answer, show;
+
 
 	//Define different controls for different players
 	Dictionary<string, KeyCode> p1Controls = 
@@ -107,6 +109,8 @@ public class BoardManager : MonoBehaviour {
 			controls = p1Controls;
 		else
 			controls = p2Controls;
+
+
 	}
 
 	void DisplayBoard () {
@@ -123,6 +127,20 @@ public class BoardManager : MonoBehaviour {
 		}
 		Select (0, 0);
 		pointerNum = 0;
+
+		//hardcoded to only get dummy board, can change later 
+		answer = RefBoard.getAnswerBoard(1);
+		show = RefBoard.getShowBoard (1);
+
+
+		for (int c = 0; c < 9; c++) {
+			for (int r = 0; r < 9; r++) {
+				if (show [r, c] == 1) {
+					board [r, c].GetComponent<Cell> ().Val = answer [r, c] - 1;
+				}
+			}
+		}
+		Debug.Log (board [0, 0].GetComponent<Cell> ().Val);
 	}
 
 
@@ -198,6 +216,14 @@ public class BoardManager : MonoBehaviour {
 				//PowerUp ();
 				UnlockGridCell();
 
+				//LockGridCell();
+				SquidInk();
+
+			if (Input.GetKeyDown (KeyCode.H))
+				//PowerUp ();
+				//UnlockGridCell();
+				LionScare();
+			
 		} 
 		else 
 		{
@@ -215,8 +241,37 @@ public class BoardManager : MonoBehaviour {
 		while (board [randomRow, randomCol].GetComponent<Cell> ().Locked ||
 			board [randomRow, randomCol].GetComponent<Cell> ().Val != -1) 
 		{
+
+
+
+	//checks to see whether all of the cells are locked/filled with an animal or not
+	private bool openGrid()
+	{
+		int openCells = 0;
+		for(int r = 0; r < 9; r++){
+			for(int c = 0; c < 9; c++){
+				if(board[r,c].GetComponent<Cell>().Val == -1 && board[r,c].GetComponent<Cell>().Locked == false)
+					openCells += 1;
+			}
+		}
+		if(openCells > 0)
+			return true;
+		else
+			return false;
+	}
+
+
+	// locks the grid cell that is selected
+	private void LockGridCell()
+	{
+		if (openGrid ()) {
 			randomRow = Random.Range (0, 9);
 			randomCol = Random.Range (0, 9);
+			while (board [randomRow, randomCol].GetComponent<Cell> ().Locked ||
+			      board [randomRow, randomCol].GetComponent<Cell> ().Val != -1) {
+				randomRow = Random.Range (0, 9);
+				randomCol = Random.Range (0, 9);
+			}
 		}
 		board [randomRow, randomCol].GetComponent<Cell> ().Locked = true;
 		GameObject gridLock = Instantiate (lockPrefab);
@@ -268,6 +323,11 @@ public class BoardManager : MonoBehaviour {
 		randomRow = Random.Range (0, 9);
 		for (int c = 0; c < 9; c++) {
 			board [randomRow, c].GetComponent<Cell> ().Val = -1;
+			foreach (GameObject sprite in board[randomRow,c].GetComponent<Cell>().childList)
+			{
+				Destroy (sprite);
+				board [randomRow, c].GetComponent<Cell> ().childList.Remove (sprite);
+			}
 		}
 	}
 
@@ -291,7 +351,9 @@ public class BoardManager : MonoBehaviour {
 
 	private void Place(){
 		//if placement is correct and cell isn't locked 
-		if (!selectedCell.GetComponent<Cell> ().Locked)
+
+		if (!selectedCell.GetComponent<Cell> ().Locked &&
+			 selectedCell.GetComponent<Cell> ().Val < 0)
 		{
 			selectedCell.GetComponent<Cell> ().Val = pointerNum;
 
@@ -317,6 +379,7 @@ public class BoardManager : MonoBehaviour {
 		//timer logic
 
 	}
+
 
 
 	/*
