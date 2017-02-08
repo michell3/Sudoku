@@ -235,19 +235,6 @@ public class BoardManager : MonoBehaviour {
 		
 	}
 
-
-	private void Timer(){
-		if (increment == true) {
-
-			image.fillAmount -= 1.0f / timeSpeed * Time.deltaTime;
-
-			if (image.fillAmount == 0) {
-				image.fillAmount = 1;
-			}
-		}
-	}
-
-
 	//checks to see whether all of the cells are locked/filled with an animal or not
 	private bool openGrid() {
 		int openCells = 0;
@@ -348,10 +335,6 @@ public class BoardManager : MonoBehaviour {
 
 	private void Place() {
 		//if placement is correct and cell isn't locked 
-<<<<<<< HEAD
-=======
-	
->>>>>>> 57c3756579d1d8dd34134fc829c8bdcb35045d7a
 		if (!selectedCell.GetComponent<Cell> ().Locked &&
 			 selectedCell.GetComponent<Cell> ().Val < 0)
 		{
