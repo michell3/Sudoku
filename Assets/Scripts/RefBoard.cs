@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class RefBoard{
+
 	private static int[,] answer1 = {  { 8, 7, 2, 9, 5, 6, 1, 4, 3 },
 								{ 1, 3, 5, 7, 8, 4, 9, 2, 6 },
 								{ 9, 6, 4, 2, 1, 3, 7, 5, 8 },

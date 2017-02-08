@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class BoardManager : MonoBehaviour {
+	
 	//for the purposes of sizing
 	public GameObject sampleSprite;
 	public GameObject pointer;
@@ -12,12 +13,10 @@ public class BoardManager : MonoBehaviour {
 	public GameObject inkPrefab;
 	public List<GameObject> lockList = new List<GameObject>();
 
-	public Image image; // timer bar
-	public Image image2; // powerup bar
+	public Image image; // timer
 	public float timeSpeed = 30.0f; // to adjust the speed of countdown timer
 	public bool increment;
 	public bool decrement;
-
 
 	private GameObject[,] board;
 
@@ -111,8 +110,6 @@ public class BoardManager : MonoBehaviour {
 			controls = p1Controls;
 		else
 			controls = p2Controls;
-
-
 	}
 
 	void DisplayBoard () {
@@ -145,9 +142,6 @@ public class BoardManager : MonoBehaviour {
 		Debug.Log (board [0, 0].GetComponent<Cell> ().Val);
 	}
 
-
-
-
 	private void Select(int row, int col){
 		if (row < 0 || row >= rows || col < 0 || col >= columns)
 			return;
@@ -169,8 +163,10 @@ public class BoardManager : MonoBehaviour {
 	}
 
 	void Update(){
-		//if the battle starts
-		Timer ();
+		if (decrement == true) {
+			image.fillAmount -= 1.0f / timeSpeed * Time.deltaTime;
+		}
+
 		if (!stunned) {
 			//moving the selector. 
 			if (Input.GetKeyDown (controls ["down"])) {
@@ -200,23 +196,15 @@ public class BoardManager : MonoBehaviour {
 				choosePointerNum(1);
 			}
 
-
 			if (Input.GetKeyDown (controls ["lock"])) {
 				LockGridCell ();
 			}
-
-
+				
 			//REMEMBER TO DELETE THIS
 			if (Input.GetKeyDown (KeyCode.G))
 				//PowerUp ();
-				//LockGridCell();
-				SquidInk();
-
-			if (Input.GetKeyDown (KeyCode.H))
-				//PowerUp ();
-				//UnlockGridCell();
-				LionScare();
-			
+				LockGridCell();
+			//SquidInk();
 		} 
 		else 
 		{
@@ -225,7 +213,7 @@ public class BoardManager : MonoBehaviour {
 				stunned = false;
 		}
 	}
-
+		
 	private void choosePointerNum(int move){
 
 
@@ -282,7 +270,6 @@ public class BoardManager : MonoBehaviour {
 		else
 			return false;
 	}
-
 
 	// locks the grid cell that is selected
 	private void LockGridCell()
@@ -379,13 +366,13 @@ public class BoardManager : MonoBehaviour {
 			 selectedCell.GetComponent<Cell> ().Val < 0)
 		{
 			selectedCell.GetComponent<Cell> ().Val = pointerNum;
-			if (decrement == true) {
-				image2.fillAmount = image2.fillAmount + image.fillAmount;
-				if (image2.fillAmount == 1) {
-					image2.fillAmount = 0;
-					powerup = true;
+
+			if (increment == true) {
+				image.fillAmount = image.fillAmount + 0.20f;
+				if (image.fillAmount == 1) {
+					image.fillAmount = 0;
+					//powerup = true;
 				}
-				image.fillAmount = 1;
 			}
 		}
 		//if you try to place something in a locked grid 
