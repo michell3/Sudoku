@@ -42,6 +42,8 @@ public class BoardManager : MonoBehaviour {
 	// Game state variables
 	public bool isP1 = true;
 
+	private int randomIndex;
+
 	private GameObject selectedCell;
 
 	private int pointerCol;
@@ -126,18 +128,19 @@ public class BoardManager : MonoBehaviour {
 		Select (0, 0);
 		pointerNum = 0;
 
-		// Hardcoded to only get dummy board, can change later 
-		answer = RefBoard.getAnswerBoard(1);
-		show = RefBoard.getShowBoard (1);
+		randomIndex = (int)Mathf.Floor (Random.value * 100f + 1f);
+		answer = RefBoard.getAnswerBoard(randomIndex);
+		show = RefBoard.getShowBoard (randomIndex);
+
+		Debug.Log (show[0, 0]);
 
 		for (int c = 0; c < 9; c++) {
 			for (int r = 0; r < 9; r++) {
-				if (show [r, c] == 1) {
+				if (show [r, c] > 0) {
 					board [r, c].GetComponent<Cell> ().Val = answer [r, c] - 1;
 				}
 			}
 		}
-		Debug.Log (board [0, 0].GetComponent<Cell> ().Val);
 	}
 
 	private void Select(int row, int col) {
