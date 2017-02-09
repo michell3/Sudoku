@@ -59,6 +59,8 @@ public class BoardManager : MonoBehaviour {
 	private float stunTime = 0;
 	private bool stunned = false;
 
+	private int lionScareCount;
+
 	private bool unlockPress = false;
 
 	private Dictionary<string, KeyCode> controls;
@@ -200,10 +202,13 @@ public class BoardManager : MonoBehaviour {
 			//REMEMBER TO DELETE THIS
 			if (Input.GetKeyDown (KeyCode.G)) {
 				//PowerUp ();
-				LockGridCell();
+				//LockGridCell();
 				//SquidInk();
+				LionScare();
 			}
-		} else {
+		} 
+		else
+		{
 			stunTime -= Time.deltaTime;
 			if (stunTime < 0)
 				stunned = false;
@@ -239,7 +244,7 @@ public class BoardManager : MonoBehaviour {
 	}
 
 	//checks to see whether all of the cells are locked/filled with an animal or not
-	private bool openGrid() {
+	private int openGrid() {
 		int openCells = 0;
 		for(int r = 0; r < 9; r++){
 			for(int c = 0; c < 9; c++){
@@ -248,15 +253,13 @@ public class BoardManager : MonoBehaviour {
 					openCells += 1;
 			}
 		}
-		if(openCells > 0)
-			return true;
-		else
-			return false;
+		return openCells;
 	}
 
 	// locks the grid cell that is selected
-	private void LockGridCell() {
-		if (openGrid ()) {
+	private void LockGridCell()
+	{
+		if (openGrid () != 0) {
 			randomRow = Random.Range (0, 9);
 			randomCol = Random.Range (0, 9);
 			while (board [randomRow, randomCol].GetComponent<Cell> ().Locked ||
@@ -267,7 +270,7 @@ public class BoardManager : MonoBehaviour {
 		}
 		board [randomRow, randomCol].GetComponent<Cell> ().Locked = true;
 		GameObject gridLock = Instantiate (lockPrefab);
-		gridLock.transform.position = board [randomRow, randomCol].GetComponent<Cell> ().transform.position;
+		gridLock.transform.position = (board [randomRow, randomCol].GetComponent<Cell> ().transform.position);
 		lockList.Add (gridLock);
 	}
 
@@ -304,17 +307,30 @@ public class BoardManager : MonoBehaviour {
 		}
 	}
 
+
+
 	// a lion runs across a certain row and scares off all the animals from that row
 	//MAKE IT SO THAT THE SPRITES ON THE POSITIONS ARE DESTROYED
-	private void LionScare() {
-		print ("Lion Scare");
-		randomRow = Random.Range (0, 9);
-		for (int c = 0; c < 9; c++) {
-			board [randomRow, c].GetComponent<Cell> ().Val = -1;
-			foreach (GameObject sprite in board[randomRow,c].GetComponent<Cell>().childList)
+	private void LionScare()
+	{
+		if (openGrid () < 5)
+			lionScareCount = openGrid ();
+		else
+			lionScareCount = 5;
+		while (lionScareCount > 1) 
+		{
+			randomRow = Random.Range (0, 9);
+			randomCol = Random.Range (0, 9);
+			while (board [randomRow, randomCol].GetComponent<Cell> ().Val == -1) {
+				randomRow = Random.Range (0, 9);
+				randomCol = Random.Range (0, 9);
+			}
+			board [randomRow, randomCol].GetComponent<Cell> ().Val = -1;
+			foreach (GameObject sprite in board[randomRow,randomCol].GetComponent<Cell>().childList) 
 			{
 				Destroy (sprite);
-				board [randomRow, c].GetComponent<Cell> ().childList.Remove (sprite);
+				board [randomRow, randomCol].GetComponent<Cell> ().childList.Remove (sprite);
+				lionScareCount -= 1;
 			}
 		}
 	}
