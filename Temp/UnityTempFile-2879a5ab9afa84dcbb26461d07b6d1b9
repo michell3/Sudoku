@@ -79,8 +79,8 @@
 -define:UNITY_EDITOR_OSX
 -define:UNITY_TEAM_LICENSE
 'Assets/Scripts/BoardManager.cs'
+'Assets/Scripts/CageRattle.cs'
 'Assets/Scripts/Cell.cs'
-'Assets/Scripts/Clock.cs'
 'Assets/Scripts/InkDestruction.cs'
 'Assets/Scripts/RefBoard.cs'
 'Assets/Scripts/Timer.cs'

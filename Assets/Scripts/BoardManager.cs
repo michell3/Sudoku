@@ -12,6 +12,7 @@ public class BoardManager : MonoBehaviour {
 	public GameObject lockPrefab;
 	public GameObject inkPrefab;
 	public List<GameObject> lockList = new List<GameObject>();
+	private List<GameObject> descendList = new List<GameObject> ();
 
 	// Timer gameobject
 	public GameObject TimerBar;
@@ -59,8 +60,6 @@ public class BoardManager : MonoBehaviour {
 
 	private int lionScareCount;
 
-	private bool unlockPress = false;
-
 	private Dictionary<string, KeyCode> controls;
 
 	private int[,] answer, show;
@@ -75,7 +74,7 @@ public class BoardManager : MonoBehaviour {
 		{"place", KeyCode.Space},
 		{"chooseUp", KeyCode.N},
 		{"chooseDown", KeyCode.B},
-		{"lock",KeyCode.T}
+		{"lock", KeyCode.LeftShift}
 	};
 
 	Dictionary<string, KeyCode> p2Controls = 
@@ -87,7 +86,7 @@ public class BoardManager : MonoBehaviour {
 		{"place", KeyCode.R},
 		{"chooseUp", KeyCode.Y},
 		{"chooseDown", KeyCode.T},
-		{"lock",KeyCode.Y}
+		{"lock", KeyCode.RightShift}
 	};
 
 	void Awake () {
@@ -163,6 +162,8 @@ public class BoardManager : MonoBehaviour {
 	}
 
 	void Update() {
+		//makes animals feared by lion fall
+		animalDescend ();
 
 		if (!stunned) {
 			//moving the selector. 
@@ -176,12 +177,10 @@ public class BoardManager : MonoBehaviour {
 				Select (pointerRow, pointerCol + 1);
 			}
 
-			if (Input.GetKeyDown (controls ["place"]) && !unlockPress) {
+			if (Input.GetKeyDown (controls ["place"])) {
 				Place ();
-			} else if (Input.GetKeyDown (controls ["place"]) && unlockPress) {
-				UnlockGridCell ();
-				unlockPress = false;
-			} else if (Input.GetKeyDown (controls ["chooseDown"])) {
+			} 
+			else if (Input.GetKeyDown (controls ["chooseDown"])) {
 				//make sure to wrap around # of rows/columns, then add 1 since
 				//we are 1-indexing
 				choosePointerNum(-1);
@@ -191,10 +190,10 @@ public class BoardManager : MonoBehaviour {
 				//we are 1-indexing
 				choosePointerNum(1);
 			}
-
 			if (Input.GetKeyDown (controls ["lock"])) {
-				LockGridCell ();
-			}
+				//LockGridCell ();
+				LionScare();
+			} 
 				
 			//REMEMBER TO DELETE THIS
 			if (Input.GetKeyDown (KeyCode.G)) {
@@ -204,6 +203,8 @@ public class BoardManager : MonoBehaviour {
 				LionScare();
 			}
 		} 
+
+		//allows you to move when you are not stunned
 		else
 		{
 			stunTime -= Time.deltaTime;
@@ -212,16 +213,16 @@ public class BoardManager : MonoBehaviour {
 		}
 	}
 		
-	private void choosePointerNum(int move){
-
-
+	private void choosePointerNum(int move)
+	{
 		selectSprite (false); // deselect current sprite
 		pointerNum = ((rows + pointerNum + move) % rows); 
 		selectSprite(true); // select new sprite
 	
 	}
 
-	private void selectSprite(bool select){
+	private void selectSprite(bool select)
+	{
 		GameObject temp; 
 		Color newColor;
 
@@ -240,8 +241,9 @@ public class BoardManager : MonoBehaviour {
 		
 	}
 
-	//checks to see whether all of the cells are locked/filled with an animal or not
-	private int openGrid() {
+	//returns how many cells are empty and not locked
+	private int openGrid() 
+	{
 		int openCells = 0;
 		for(int r = 0; r < 9; r++){
 			for(int c = 0; c < 9; c++){
@@ -252,6 +254,20 @@ public class BoardManager : MonoBehaviour {
 		}
 		return openCells;
 	}
+
+	//counts how many animals are placed on the board
+	private int animalCount()
+	{
+		int animals = 0;
+		for(int r = 0; r < 9; r++){
+			for(int c = 0; c < 9; c++){
+				if(board[r,c].GetComponent<Cell>().Val > -1)
+					animals += 1;
+			}
+		}
+		return animals;
+	}
+
 
 	// locks the grid cell that is selected
 	private void LockGridCell()
@@ -266,34 +282,23 @@ public class BoardManager : MonoBehaviour {
 			}
 		}
 		board [randomRow, randomCol].GetComponent<Cell> ().Locked = true;
+		board [randomRow, randomCol].GetComponent<Cell> ().lockTimer = 20;
 		GameObject gridLock = Instantiate (lockPrefab);
 		gridLock.transform.position = (board [randomRow, randomCol].GetComponent<Cell> ().transform.position);
 		lockList.Add (gridLock);
 	}
 
-	// unlocks the grid cell that is selected if it is locked
-	private void UnlockGridCell() {
-		print ("Unlock Grid");
-		selectedCell.GetComponent<Cell> ().Locked = false;
-		foreach( GameObject Lock in lockList)
-		{
-			if (Lock.transform.position == selectedCell.GetComponent<Cell> ().transform.position)
-			{
-				lockList.Remove (Lock);
-				Destroy (Lock);
-			}
-		}
-	}
-
 	// stuns a player, either yourself if you choose an incorrct cell or the enemy if you ge tthe stun power-up
-	private void Stun(int seconds) {
+	private void Stun(int seconds)
+	{
 		print ("Stun");
 		stunned = true;
 		stunTime = seconds;
 	}
 
 	// makes a cell not visible when opponent gets squid ink ability
-	private void SquidInk() {
+	private void SquidInk()
+	{
 		randomRow = Random.Range (0, 7);
 		randomCol = Random.Range (0, 7);
 		for (int r = randomRow; r < randomRow + 3; r++) {
@@ -310,24 +315,42 @@ public class BoardManager : MonoBehaviour {
 	//MAKE IT SO THAT THE SPRITES ON THE POSITIONS ARE DESTROYED
 	private void LionScare()
 	{
-		if (openGrid () < 5)
-			lionScareCount = openGrid ();
+		if (animalCount() < 5)
+			lionScareCount = animalCount ();
 		else
 			lionScareCount = 5;
-		while (lionScareCount > 1) 
+
+		if (animalCount () != 0)
 		{
-			randomRow = Random.Range (0, 9);
-			randomCol = Random.Range (0, 9);
-			while (board [randomRow, randomCol].GetComponent<Cell> ().Val == -1) {
+			while (lionScareCount > 0) {
 				randomRow = Random.Range (0, 9);
 				randomCol = Random.Range (0, 9);
-			}
-			board [randomRow, randomCol].GetComponent<Cell> ().Val = -1;
-			foreach (GameObject sprite in board[randomRow,randomCol].GetComponent<Cell>().childList) 
-			{
-				Destroy (sprite);
-				board [randomRow, randomCol].GetComponent<Cell> ().childList.Remove (sprite);
+				while (board [randomRow, randomCol].GetComponent<Cell> ().Val == -1)
+				{
+					randomRow = Random.Range (0, 9);
+					randomCol = Random.Range (0, 9);
+				}
+				board [randomRow, randomCol].GetComponent<Cell> ().Val = -1;
+				foreach (GameObject sprite in board[randomRow,randomCol].GetComponent<Cell>().childList)
+				{
+					//Destroy (sprite);
+					descendList.Add(sprite);
+				}
 				lionScareCount -= 1;
+			}
+		}
+	}
+
+	//makes the animals fall when they are scared by the lion, then destroys them
+	private void animalDescend()
+	{
+		foreach (GameObject animal in descendList)
+		{
+			animal.transform.Translate (0, -.1f, 0);
+			if (animal.transform.position.y < -6) 
+			{
+				descendList.Remove (animal);
+				Destroy (animal);
 			}
 		}
 	}
@@ -335,16 +358,14 @@ public class BoardManager : MonoBehaviour {
 
 	// when your power-up meter is full, select a random power
 	public void PowerUp() {
-		power = Random.Range (1, 6);
+		power = Random.Range (1, 5);
 		if (power == 1)
 			Stun (5);
 		else if (power == 2)
 			LockGridCell ();
-		else if (power == 3) 
-			unlockPress = true;
-		else if (power == 4)
+		else if (power == 3)
 			LionScare ();
-		else if (power == 5)
+		else if (power == 4)
 			SquidInk ();
 	}
 
