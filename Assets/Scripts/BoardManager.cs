@@ -85,7 +85,7 @@ public class BoardManager : MonoBehaviour {
 		{"place", KeyCode.R},
 		{"chooseUp", KeyCode.Y},
 		{"chooseDown", KeyCode.T},
-		{"lock",KeyCode.Y}
+		//{"lock",KeyCode.Y}
 	};
 
 	void Awake () {
@@ -190,7 +190,7 @@ public class BoardManager : MonoBehaviour {
 				choosePointerNum(1);
 			}
 
-			if (Input.GetKeyDown (controls ["lock"])) {
+			if (TimerBar.GetComponent<Timer>().IsPoweredUp() == true) {
 				LockGridCell ();
 			}
 				
@@ -332,11 +332,14 @@ public class BoardManager : MonoBehaviour {
 			SquidInk ();
 	}
 
+	private bool Check(){
+		return (answer [pointerRow, pointerCol] - 1 == pointerNum);
+	}
 
 	private void Place() {
 		//if placement is correct and cell isn't locked 
 		if (!selectedCell.GetComponent<Cell> ().Locked &&
-			 selectedCell.GetComponent<Cell> ().Val < 0)
+			selectedCell.GetComponent<Cell> ().Val < 0 && Check())
 		{
 			selectedCell.GetComponent<Cell> ().Val = pointerNum;
 

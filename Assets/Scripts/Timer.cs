@@ -30,7 +30,9 @@ public class Timer : MonoBehaviour {
 
 	// Called by the board manager to see if a powerup occurred
 	public bool IsPoweredUp() {
-		return powerup;
+		bool res = powerup;
+		powerup = false;
+		return res;
 	}
 
 	void Awake () {
@@ -42,6 +44,8 @@ public class Timer : MonoBehaviour {
 		image = GetComponent<Image> ();
 	}
 
+
+
 	void Update () {
 
 		if (image.fillAmount >= initialValue) {
@@ -49,17 +53,19 @@ public class Timer : MonoBehaviour {
 			if (image.fillAmount >= 0.99f) {
 				isGreen = true;
 
+
 				if (greenTime <= 0.0f) {
+					powerup = true;
 					isGreen = false;
 					greenTime = GreenTime;
 					image.sprite = RedTimer;
 					image.fillAmount = initialValue;
-					powerup = false;
+					//powerup = false;
 					return;
 				}
 
 			} else {
-				image.fillAmount -= 1.0f / timerSpeed * Time.deltaTime;
+				image.fillAmount += 1.0f / timerSpeed * Time.deltaTime;
 
 				if (image.fillAmount <= 0.5f) {
 					image.sprite = RedTimer;
@@ -68,11 +74,12 @@ public class Timer : MonoBehaviour {
 					return;
 				} else {
 					image.sprite = GreenTimer;
-					powerup = true;
+
 				}
 
 			}
 		}
+
 
 		if (isGreen) {
 			greenTime -= Time.deltaTime;
