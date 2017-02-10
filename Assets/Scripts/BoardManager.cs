@@ -194,8 +194,7 @@ public class BoardManager : MonoBehaviour {
 				choosePointerNum(1);
 			}
 			if (Input.GetKeyDown (controls ["lock"])) {
-				//LockGridCell ();
-				LionScare();
+				LockGridCell ();
 			} 
 				
 			//REMEMBER TO DELETE THIS
