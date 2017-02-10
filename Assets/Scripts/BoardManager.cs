@@ -67,8 +67,6 @@ public class BoardManager : MonoBehaviour {
 	private int[,] answer, show;
 
 
-
-
 	//Define different controls for different players
 	Dictionary<string, KeyCode> p1Controls = 
 		new Dictionary<string, KeyCode> () {
@@ -213,6 +211,7 @@ public class BoardManager : MonoBehaviour {
 			if (Input.GetKeyDown (controls ["lock"])) {
 				LockGridCell ();
 			} 
+<<<<<<< HEAD
 				
 			//REMEMBER TO DELETE THIS
 			if (Input.GetKeyDown (KeyCode.G)) {
@@ -221,6 +220,8 @@ public class BoardManager : MonoBehaviour {
 				//SquidInk();
 				LionScare();
 			}
+=======
+>>>>>>> ba409dfb99c340d4377a4b619f6ee2d02bccca66
 
 			P1XBoxControls ();
 		} 
@@ -394,7 +395,8 @@ public class BoardManager : MonoBehaviour {
 		return (answer [pointerRow, pointerCol] - 1 == pointerNum);
 	}
 
-	private void Place() {
+	private void Place()
+	{
 		//if placement is correct and cell isn't locked 
 		if (!selectedCell.GetComponent<Cell> ().Locked &&
 			selectedCell.GetComponent<Cell> ().Val < 0 && Check())
@@ -415,7 +417,7 @@ public class BoardManager : MonoBehaviour {
 			Stun (2);
 		}
 	}
-
+		
 	//XBOX CONTROLLER CONTROLS
 	private void P1XBoxControls()
 	{
@@ -434,6 +436,27 @@ public class BoardManager : MonoBehaviour {
 			if (Input.GetButtonDown ("A_Button"))
 				Place ();
 
+<<<<<<< HEAD
+	//XBOX CONTROLLER CONTROLS
+	private void P1XBoxControls()
+	{
+		if (!isP1) {
+			//movement around the grid
+			if (Input.GetButtonDown ("Up_Button"))
+				Select (pointerRow + 1, pointerCol);
+			else if (Input.GetButtonDown ("Down_Button"))
+				Select (pointerRow - 1, pointerCol);
+			else if (Input.GetButtonDown ("Left_Button"))
+				Select (pointerRow, pointerCol - 1);
+			else if (Input.GetButtonDown ("Right_Button"))
+				Select (pointerRow, pointerCol + 1);
+
+			//placing the sprites
+			if (Input.GetButtonDown ("A_Button"))
+				Place ();
+
+=======
+>>>>>>> ba409dfb99c340d4377a4b619f6ee2d02bccca66
 			//scrolling through sprites to place
 			if (Input.GetButtonDown ("Left_Trigger")) {
 				choosePointerNum (-1);
@@ -441,6 +464,7 @@ public class BoardManager : MonoBehaviour {
 				choosePointerNum (1);
 			}	
 
+<<<<<<< HEAD
 		}
 		else {
 			//test power-ups
@@ -451,6 +475,18 @@ public class BoardManager : MonoBehaviour {
 		}
 	}
 
+=======
+		} else {
+			//test power-ups
+			if (Input.GetButtonDown ("B_Button"))
+				LionScare ();
+			if (Input.GetButtonDown ("X_Button"))
+				Stun (5);
+			if (Input.GetButtonDown ("Y_Button"))
+				LockGridCell ();
+		}
+	}
+>>>>>>> ba409dfb99c340d4377a4b619f6ee2d02bccca66
 	public int pointerNumber(){
 		return pointerNum;
 	}

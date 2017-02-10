@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<< HEAD:Assets/UI/Ink.prefab.meta
+guid: 4997f6f8743454ef189f060cb6450c71
+=======
 guid: fb74a178c127d4cbda8fc6ef1e161d3b
+>>>>>>> a524496ffd6d03ca7420734c9ef332dec19ea382:Assets/UI/powerups/ink/Ink.prefab.meta
 timeCreated: 1486467484
 licenseType: Free
 NativeFormatImporter:
