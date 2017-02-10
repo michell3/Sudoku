@@ -30,7 +30,11 @@ public class Timer : MonoBehaviour {
 
 	// Called by the board manager when a correct number is placed
 	public void IncreaseTimer() {
-		fillAmount = fillAmount + increaseAmount;
+		float newAmount = fillAmount + increaseAmount;
+		if (newAmount > 1.0f) {
+			newAmount = 1.0f;
+		}
+		fillAmount = newAmount;
 		UpdateTimer ();
 	}
 

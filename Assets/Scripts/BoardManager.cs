@@ -164,13 +164,10 @@ public class BoardManager : MonoBehaviour {
 		pointerCol = col;
 		pointerRow = row;
 	}
-		
-
 
 	void Update() {
 		//makes animals feared by lion fall
 		animalDescend ();
-
 
 
 		if (!stunned) {
@@ -209,11 +206,13 @@ public class BoardManager : MonoBehaviour {
 				
 			//REMEMBER TO DELETE THIS
 			if (Input.GetKeyDown (KeyCode.G)) {
-				//PowerUp ();
-				//LockGridCell();
-				//SquidInk();
+//				PowerUp ();
+//				LockGridCell();
+//				SquidInk();
 				LionScare();
 			}
+
+			P1XBoxControls ();
 		} 
 
 		//allows you to move when you are not stunned
@@ -251,8 +250,6 @@ public class BoardManager : MonoBehaviour {
 			
 	}
 
-
-
 	//returns how many cells are empty and not locked
 	private int openGrid() 
 	{
@@ -279,7 +276,6 @@ public class BoardManager : MonoBehaviour {
 		}
 		return animals;
 	}
-
 
 	// locks the grid cell that is selected
 	private void LockGridCell()
@@ -320,8 +316,6 @@ public class BoardManager : MonoBehaviour {
 			}
 		}
 	}
-
-
 
 	// a lion runs across a certain row and scares off all the animals from that row
 	//MAKE IT SO THAT THE SPRITES ON THE POSITIONS ARE DESTROYED
@@ -367,7 +361,6 @@ public class BoardManager : MonoBehaviour {
 		}
 	}
 
-
 	// when your power-up meter is full, select a random power
 	public void PowerUp() {
 		power = Random.Range (1, 5);
@@ -385,7 +378,8 @@ public class BoardManager : MonoBehaviour {
 		return (answer [pointerRow, pointerCol] - 1 == pointerNum);
 	}
 
-	private void Place() {
+	private void Place()
+	{
 		//if placement is correct and cell isn't locked 
 		if (!selectedCell.GetComponent<Cell> ().Locked &&
 			selectedCell.GetComponent<Cell> ().Val < 0 && Check())
@@ -404,6 +398,40 @@ public class BoardManager : MonoBehaviour {
 		else
 		{
 			Stun (2);
+		}
+	}
+		
+	//XBOX CONTROLLER CONTROLS
+	private void P1XBoxControls()
+	{
+		if (!isP1) {
+			//movement around the grid
+			if (Input.GetButtonDown ("Up_Button"))
+				Select (pointerRow + 1, pointerCol);
+			else if (Input.GetButtonDown ("Down_Button"))
+				Select (pointerRow - 1, pointerCol);
+			else if (Input.GetButtonDown ("Left_Button"))
+				Select (pointerRow, pointerCol - 1);
+			else if (Input.GetButtonDown ("Right_Button"))
+				Select (pointerRow, pointerCol + 1);
+
+			//placing the sprites
+			if (Input.GetButtonDown ("A_Button"))
+				Place ();
+
+			//scrolling through sprites to place
+			if (Input.GetButtonDown ("Left_Trigger")) {
+				choosePointerNum (-1);
+			} else if (Input.GetButtonDown ("Right_Trigger")) {
+				choosePointerNum (1);
+			}	
+		}
+		else {
+			//test power-ups
+			if (Input.GetButtonDown ("B_Button"))
+				LionScare ();
+			if (Input.GetButtonDown ("Y_Button"))
+				LockGridCell ();
 		}
 	}
 
