@@ -66,6 +66,9 @@ public class BoardManager : MonoBehaviour {
 
 	private int[,] answer, show;
 
+
+
+
 	//Define different controls for different players
 	Dictionary<string, KeyCode> p1Controls = 
 		new Dictionary<string, KeyCode> () {
@@ -88,6 +91,9 @@ public class BoardManager : MonoBehaviour {
 		{"place", KeyCode.R},
 		{"chooseUp", KeyCode.Y},
 		{"chooseDown", KeyCode.T},
+
+		//{"lock",KeyCode.Y}
+
 		{"lock", KeyCode.RightShift}
 	};
 
@@ -112,6 +118,8 @@ public class BoardManager : MonoBehaviour {
 			controls = p1Controls;
 		else
 			controls = p2Controls;
+
+
 	}
 
 	void DisplayBoard () {
@@ -127,7 +135,7 @@ public class BoardManager : MonoBehaviour {
 			}
 		}
 		Select (0, 0);
-		pointerNum = 0;
+		pointerNum = 0;  //what the meanign of pointerNUM: the actual number users put in the cell.
 
 		randomIndex = (int)Mathf.Floor (Random.value * 100f + 1f);
 		answer = RefBoard.getAnswerBoard(randomIndex);
@@ -159,14 +167,19 @@ public class BoardManager : MonoBehaviour {
 		selectedCell.GetComponent<Cell>().Selected = true; 
 
 		//reset location of the pointer
+
 		pointer.transform.position = selectedCell.transform.position;
 		pointerCol = col;
 		pointerRow = row;
 	}
+		
+
 
 	void Update() {
 		//makes animals feared by lion fall
 		animalDescend ();
+
+
 
 		if (!stunned) {
 			//moving the selector. 
@@ -192,6 +205,11 @@ public class BoardManager : MonoBehaviour {
 				//make sure to wrap around # of rows/columns, then add 1 since
 				//we are 1-indexing
 				choosePointerNum(1);
+			}
+
+
+			if (TimerBar.GetComponent<Timer>().IsPoweredUp() == true) {
+				LockGridCell ();
 			}
 			if (Input.GetKeyDown (controls ["lock"])) {
 				LockGridCell ();
@@ -239,9 +257,9 @@ public class BoardManager : MonoBehaviour {
 		//get the selected box child of the sprite and then activate/deactivate it
 		temp.transform.GetChild(0).gameObject.SetActive(select);
 			
-		
-		
 	}
+
+
 
 	//returns how many cells are empty and not locked
 	private int openGrid() 
@@ -371,11 +389,14 @@ public class BoardManager : MonoBehaviour {
 			SquidInk ();
 	}
 
+	private bool Check(){
+		return (answer [pointerRow, pointerCol] - 1 == pointerNum);
+	}
 
 	private void Place() {
 		//if placement is correct and cell isn't locked 
 		if (!selectedCell.GetComponent<Cell> ().Locked &&
-			 selectedCell.GetComponent<Cell> ().Val < 0)
+			selectedCell.GetComponent<Cell> ().Val < 0 && Check())
 		{
 			selectedCell.GetComponent<Cell> ().Val = pointerNum;
 
@@ -392,5 +413,9 @@ public class BoardManager : MonoBehaviour {
 		{
 			Stun (2);
 		}
+	}
+
+	public int pointerNumber(){
+		return pointerNum;
 	}
 }
