@@ -67,11 +67,6 @@ public class BoardManager : MonoBehaviour {
 	private int[,] answer, show;
 
 
-<<<<<<< HEAD
-=======
-
-
->>>>>>> a524496ffd6d03ca7420734c9ef332dec19ea382
 	//Define different controls for different players
 	Dictionary<string, KeyCode> p1Controls = 
 		new Dictionary<string, KeyCode> () {
@@ -412,8 +407,7 @@ public class BoardManager : MonoBehaviour {
 			Stun (2);
 		}
 	}
-
-<<<<<<< HEAD
+		
 	//XBOX CONTROLLER CONTROLS
 	private void P1XBoxControls()
 	{
@@ -433,18 +427,13 @@ public class BoardManager : MonoBehaviour {
 				Place ();
 
 			//scrolling through sprites to place
-			if (Input.GetButtonDown ("Left_Trigger")) 
-			{
+			if (Input.GetButtonDown ("Left_Trigger")) {
 				choosePointerNum (-1);
-			} 
-			else if (Input.GetButtonDown ("Right_Trigger"))
-			{
+			} else if (Input.GetButtonDown ("Right_Trigger")) {
 				choosePointerNum (1);
 			}	
 
-		}
-
-		else{
+		} else {
 			//test power-ups
 			if (Input.GetButtonDown ("B_Button"))
 				LionScare ();
@@ -453,9 +442,8 @@ public class BoardManager : MonoBehaviour {
 			if (Input.GetButtonDown ("Y_Button"))
 				LockGridCell ();
 		}
-=======
+	}
 	public int pointerNumber(){
 		return pointerNum;
->>>>>>> a524496ffd6d03ca7420734c9ef332dec19ea382
 	}
 }
