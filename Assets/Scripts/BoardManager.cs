@@ -31,6 +31,7 @@ public class BoardManager : MonoBehaviour {
 	private float spriteWidth;
 	private float spriteHeight;
 	private float spriteScale;
+	private float boardScale;
 
 	// Display parameters
 	public float Spacing = .8f;
@@ -66,9 +67,6 @@ public class BoardManager : MonoBehaviour {
 
 	private int[,] answer, show;
 
-
-
-
 	//Define different controls for different players
 	Dictionary<string, KeyCode> p1Controls = 
 		new Dictionary<string, KeyCode> () {
@@ -91,9 +89,6 @@ public class BoardManager : MonoBehaviour {
 		{"place", KeyCode.R},
 		{"chooseUp", KeyCode.Y},
 		{"chooseDown", KeyCode.T},
-
-		//{"lock",KeyCode.Y}
-
 		{"lock", KeyCode.RightShift}
 	};
 
@@ -101,9 +96,10 @@ public class BoardManager : MonoBehaviour {
 		board = new GameObject[rows, columns];
 
 		spriteScale = sampleSprite.transform.localScale.x;
-		spacing = Spacing * spriteScale;
-		leftOffset = LeftOffset * spriteScale;
-		topOffset = TopOffset * spriteScale;
+		boardScale = GetComponent<SpriteRenderer> ().transform.localScale.x;
+		spacing = Spacing * spriteScale * boardScale;
+		leftOffset = LeftOffset * spriteScale * boardScale;
+		topOffset = TopOffset * spriteScale * boardScale;
 
 		boardWidth = GetComponent<SpriteRenderer>().bounds.size.x;
 		boardHeight = GetComponent<SpriteRenderer>().bounds.size.y;
@@ -118,8 +114,6 @@ public class BoardManager : MonoBehaviour {
 			controls = p1Controls;
 		else
 			controls = p2Controls;
-
-
 	}
 
 	void DisplayBoard () {
@@ -140,8 +134,6 @@ public class BoardManager : MonoBehaviour {
 		randomIndex = (int)Mathf.Floor (Random.value * 100f + 1f);
 		answer = RefBoard.getAnswerBoard(randomIndex);
 		show = RefBoard.getShowBoard (randomIndex);
-
-		Debug.Log (show[0, 0]);
 
 		for (int c = 0; c < 9; c++) {
 			for (int r = 0; r < 9; r++) {
