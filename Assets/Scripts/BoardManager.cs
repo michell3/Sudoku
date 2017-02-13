@@ -31,6 +31,7 @@ public class BoardManager : MonoBehaviour {
 	private float spriteWidth;
 	private float spriteHeight;
 	private float spriteScale;
+	private float boardScale;
 
 	// Display parameters
 	public float Spacing = .8f;
@@ -66,7 +67,6 @@ public class BoardManager : MonoBehaviour {
 
 	private int[,] answer, show;
 
-
 	//Define different controls for different players
 	Dictionary<string, KeyCode> p1Controls = 
 		new Dictionary<string, KeyCode> () {
@@ -96,9 +96,10 @@ public class BoardManager : MonoBehaviour {
 		board = new GameObject[rows, columns];
 
 		spriteScale = sampleSprite.transform.localScale.x;
-		spacing = Spacing * spriteScale;
-		leftOffset = LeftOffset * spriteScale;
-		topOffset = TopOffset * spriteScale;
+		boardScale = GetComponent<SpriteRenderer> ().transform.localScale.x;
+		spacing = Spacing * spriteScale * boardScale;
+		leftOffset = LeftOffset * spriteScale * boardScale;
+		topOffset = TopOffset * spriteScale * boardScale;
 
 		boardWidth = GetComponent<SpriteRenderer>().bounds.size.x;
 		boardHeight = GetComponent<SpriteRenderer>().bounds.size.y;
@@ -113,8 +114,6 @@ public class BoardManager : MonoBehaviour {
 			controls = p1Controls;
 		else
 			controls = p2Controls;
-
-
 	}
 
 	void DisplayBoard () {
@@ -135,8 +134,6 @@ public class BoardManager : MonoBehaviour {
 		randomIndex = (int)Mathf.Floor (Random.value * 100f + 1f);
 		answer = RefBoard.getAnswerBoard(randomIndex);
 		show = RefBoard.getShowBoard (randomIndex);
-
-		Debug.Log (show[0, 0]);
 
 		for (int c = 0; c < 9; c++) {
 			for (int r = 0; r < 9; r++) {
@@ -167,8 +164,6 @@ public class BoardManager : MonoBehaviour {
 		pointerCol = col;
 		pointerRow = row;
 	}
-		
-
 
 	void Update() {
 		//makes animals feared by lion fall
@@ -205,6 +200,7 @@ public class BoardManager : MonoBehaviour {
 				if (isP1)
 					CastPowerUp ();
 			}
+<<<<<<< HEAD
 
 
 				
@@ -215,6 +211,19 @@ public class BoardManager : MonoBehaviour {
 				LionScare();
 			}
 
+=======
+			if (Input.GetKeyDown (controls ["lock"])) {
+				LockGridCell ();
+			} 
+				
+			//REMEMBER TO DELETE THIS
+			if (Input.GetKeyDown (KeyCode.G)) {
+//				PowerUp ();
+//				LockGridCell();
+//				SquidInk();
+				LionScare();
+			}
+>>>>>>> 3b41ec913d4869971ca4338366ef02851911804f
 
 			P1XBoxControls ();
 		} 
@@ -254,8 +263,6 @@ public class BoardManager : MonoBehaviour {
 			
 	}
 
-
-
 	//returns how many cells are empty and not locked
 	private int openGrid() 
 	{
@@ -282,7 +289,6 @@ public class BoardManager : MonoBehaviour {
 		}
 		return animals;
 	}
-
 
 	// locks the grid cell that is selected
 	private void LockGridCell()
@@ -326,8 +332,6 @@ public class BoardManager : MonoBehaviour {
 			}
 		}
 	}
-
-
 
 	// a lion runs across a certain row and scares off all the animals from that row
 	//MAKE IT SO THAT THE SPRITES ON THE POSITIONS ARE DESTROYED
@@ -373,7 +377,6 @@ public class BoardManager : MonoBehaviour {
 		}
 	}
 
-
 	// when your power-up meter is full, select a random power
 	public void CastPowerUp() {
 		power = Random.Range (1, 5);
@@ -415,6 +418,7 @@ public class BoardManager : MonoBehaviour {
 	}
 
 
+<<<<<<< HEAD
 	//XBOX CONTROLLER CONTROLS
 	private void P1XBoxControls()
 	{
@@ -434,6 +438,8 @@ public class BoardManager : MonoBehaviour {
 				Place ();
 
 
+=======
+>>>>>>> 3b41ec913d4869971ca4338366ef02851911804f
 			//scrolling through sprites to place
 			if (Input.GetButtonDown ("Left_Trigger")) {
 				choosePointerNum (-1);
@@ -443,6 +449,7 @@ public class BoardManager : MonoBehaviour {
 		}
 		else {
 			//test power-ups
+<<<<<<< HEAD
 			if (Input.GetButtonDown ("Y_Button"))
 				LockGridCell ();
 			if (Input.GetButtonDown ("B_Button"))
@@ -451,6 +458,15 @@ public class BoardManager : MonoBehaviour {
 	}
 
 
+=======
+			if (Input.GetButtonDown ("B_Button"))
+				LionScare ();
+			if (Input.GetButtonDown ("Y_Button"))
+				LockGridCell ();
+		}
+	}
+
+>>>>>>> 3b41ec913d4869971ca4338366ef02851911804f
 	public int pointerNumber(){
 		return pointerNum;
 	}
