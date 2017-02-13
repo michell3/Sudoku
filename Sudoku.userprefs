@@ -1,16 +1,11 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-<<<<<<< HEAD
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/Pointer.cs">
-    <Files>
-      <File FileName="Assets/Scripts/BoardManager.cs" Line="1" Column="1" />
-      <File FileName="Assets/Scripts/RefBoard.cs" Line="26" Column="25" />
-      <File FileName="Assets/Scripts/Pointer.cs" Line="43" Column="10" />
-=======
   <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/BoardManager.cs">
     <Files>
-      <File FileName="Assets/Scripts/BoardManager.cs" Line="451" Column="18" />
->>>>>>> 9531e6ab4a29bc6c9bed6ec20c9686bd59e19c94
+      <File FileName="Assets/Scripts/BoardManager.cs" Line="262" Column="5" />
+      <File FileName="Assets/Scripts/Pointer.cs" Line="46" Column="10" />
+      <File FileName="Assets/Scripts/Timer.cs" Line="46" Column="3" />
+      <File FileName="Assets/Scripts/Cell.cs" Line="40" Column="3" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
