@@ -63,6 +63,12 @@ public class BoardManager : MonoBehaviour {
 
 	private int lionScareCount;
 
+	private bool justMovedHorizontal = false;
+	private bool justMovedVertical = false;
+
+	private bool justMovedRightTrigger = false;
+	private bool justMovedLeftTrigger = false;
+
 	private Dictionary<string, KeyCode> controls;
 
 	private int[,] answer, show;
@@ -197,10 +203,8 @@ public class BoardManager : MonoBehaviour {
 			}
 
 			if (TimerBar.GetComponent<Timer>().IsPoweredUp() == true) {
-				if (isP1)
-					CastPowerUp ();
+				CastPowerUp ();
 			}
-<<<<<<< HEAD
 
 
 				
@@ -210,8 +214,7 @@ public class BoardManager : MonoBehaviour {
 				//SquidInk();
 				LionScare();
 			}
-
-=======
+				
 			if (Input.GetKeyDown (controls ["lock"])) {
 				LockGridCell ();
 			} 
@@ -223,7 +226,6 @@ public class BoardManager : MonoBehaviour {
 //				SquidInk();
 				LionScare();
 			}
->>>>>>> 3b41ec913d4869971ca4338366ef02851911804f
 
 			P1XBoxControls ();
 		} 
@@ -325,12 +327,8 @@ public class BoardManager : MonoBehaviour {
 	{
 		randomRow = Random.Range (0, 7);
 		randomCol = Random.Range (0, 7);
-		for (int r = randomRow; r < randomRow + 3; r++) {
-			for (int c = randomCol; c <  randomCol + 3; c++) {
-				GameObject squidInk = Instantiate (inkPrefab);
-				squidInk.transform.position = board [r, c].GetComponent<Cell> ().transform.position;
-			}
-		}
+		GameObject squidInk = Instantiate (inkPrefab);
+		squidInk.transform.position = board [randomRow, randomCol].GetComponent<Cell> ().transform.position;
 	}
 
 	// a lion runs across a certain row and scares off all the animals from that row
@@ -418,55 +416,63 @@ public class BoardManager : MonoBehaviour {
 	}
 
 
-<<<<<<< HEAD
 	//XBOX CONTROLLER CONTROLS
 	private void P1XBoxControls()
 	{
-		if (!isP1) {
-			//movement around the grid
-			if (Input.GetButtonDown ("Up_Button"))
-				Select (pointerRow + 1, pointerCol);
-			else if (Input.GetButtonDown ("Down_Button"))
-				Select (pointerRow - 1, pointerCol);
-			else if (Input.GetButtonDown ("Left_Button"))
-				Select (pointerRow, pointerCol - 1);
-			else if (Input.GetButtonDown ("Right_Button"))
+		if (isP1) {
+			//movement around the grid using Analog Stick
+			if (Input.GetAxis ("J_MainHorizontal") > .5 && !justMovedHorizontal) {
+				justMovedHorizontal = true;
 				Select (pointerRow, pointerCol + 1);
+			} else if (Input.GetAxis ("J_MainHorizontal") < -.5 && !justMovedHorizontal) {
+				justMovedHorizontal = true;
+				Select (pointerRow, pointerCol - 1);
+			} else if (Input.GetAxis ("J_MainVertical") > .5 && !justMovedVertical) {
+				justMovedVertical = true;
+				Select (pointerRow + 1, pointerCol);
+			} else if (Input.GetAxis ("J_MainVertical") < -.5 && !justMovedVertical) {
+				justMovedVertical = true;
+				Select (pointerRow - 1, pointerCol);
+			}
+
+			//reset analog stick so you can move again
+			if (Input.GetAxis ("J_MainHorizontal") == 0)
+				justMovedHorizontal = false;
+			if (Input.GetAxis ("J_MainVertical") == 0)
+				justMovedVertical = false;
+
 
 			//placing the sprites
 			if (Input.GetButtonDown ("A_Button"))
 				Place ();
 
-
-=======
->>>>>>> 3b41ec913d4869971ca4338366ef02851911804f
 			//scrolling through sprites to place
-			if (Input.GetButtonDown ("Left_Trigger")) {
+			if (Input.GetAxis ("Left_Trigger") > .8f && !justMovedLeftTrigger)
+			{
+				justMovedLeftTrigger = true;
 				choosePointerNum (-1);
-			} else if (Input.GetButtonDown ("Right_Trigger")) {
+			} 
+			else if (Input.GetAxis ("Right_Trigger") > .8f && !justMovedRightTrigger) 
+			{
+				justMovedRightTrigger = true;
 				choosePointerNum (1);
 			}	
+			//reset triggers to be able to be placed again
+			if (Input.GetAxis ("Right_Trigger") < .2f)
+				justMovedRightTrigger = false;
+			if (Input.GetAxis ("Left_Trigger") < .2f)
+				justMovedLeftTrigger = false;
+
 		}
 		else {
 			//test power-ups
-<<<<<<< HEAD
 			if (Input.GetButtonDown ("Y_Button"))
-				LockGridCell ();
+				SquidInk ();
 			if (Input.GetButtonDown ("B_Button"))
 				LionScare ();
 		}
 	}
 
-
-=======
-			if (Input.GetButtonDown ("B_Button"))
-				LionScare ();
-			if (Input.GetButtonDown ("Y_Button"))
-				LockGridCell ();
-		}
-	}
-
->>>>>>> 3b41ec913d4869971ca4338366ef02851911804f
 	public int pointerNumber(){
 		return pointerNum;
 	}
