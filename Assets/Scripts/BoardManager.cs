@@ -196,10 +196,22 @@ public class BoardManager : MonoBehaviour {
 				choosePointerNum(1);
 			}
 
-
 			if (TimerBar.GetComponent<Timer>().IsPoweredUp() == true) {
-				LockGridCell ();
+				if (isP1)
+					CastPowerUp ();
 			}
+<<<<<<< HEAD
+
+
+				
+			//REMEMBER TO DELETE THIS
+			if (Input.GetKeyDown (KeyCode.G)) {
+				//LockGridCell();
+				//SquidInk();
+				LionScare();
+			}
+
+=======
 			if (Input.GetKeyDown (controls ["lock"])) {
 				LockGridCell ();
 			} 
@@ -211,6 +223,7 @@ public class BoardManager : MonoBehaviour {
 //				SquidInk();
 				LionScare();
 			}
+>>>>>>> 3b41ec913d4869971ca4338366ef02851911804f
 
 			P1XBoxControls ();
 		} 
@@ -289,11 +302,14 @@ public class BoardManager : MonoBehaviour {
 				randomCol = Random.Range (0, 9);
 			}
 		}
-		board [randomRow, randomCol].GetComponent<Cell> ().Locked = true;
-		board [randomRow, randomCol].GetComponent<Cell> ().lockTimer = 20;
-		GameObject gridLock = Instantiate (lockPrefab);
-		gridLock.transform.position = (board [randomRow, randomCol].GetComponent<Cell> ().transform.position);
-		lockList.Add (gridLock);
+		if (board [randomRow, randomCol].GetComponent<Cell> ().Locked == false)
+		{
+			board [randomRow, randomCol].GetComponent<Cell> ().Locked = true;
+			board [randomRow, randomCol].GetComponent<Cell> ().lockTimer = 20;
+			GameObject gridLock = Instantiate (lockPrefab);
+			gridLock.transform.position = (board [randomRow, randomCol].GetComponent<Cell> ().transform.position);
+			lockList.Add (gridLock);
+		}
 	}
 
 	// stuns a player, either yourself if you choose an incorrct cell or the enemy if you ge tthe stun power-up
@@ -362,7 +378,7 @@ public class BoardManager : MonoBehaviour {
 	}
 
 	// when your power-up meter is full, select a random power
-	public void PowerUp() {
+	public void CastPowerUp() {
 		power = Random.Range (1, 5);
 		if (power == 1)
 			Stun (5);
@@ -400,7 +416,9 @@ public class BoardManager : MonoBehaviour {
 			Stun (2);
 		}
 	}
-		
+
+
+<<<<<<< HEAD
 	//XBOX CONTROLLER CONTROLS
 	private void P1XBoxControls()
 	{
@@ -419,6 +437,9 @@ public class BoardManager : MonoBehaviour {
 			if (Input.GetButtonDown ("A_Button"))
 				Place ();
 
+
+=======
+>>>>>>> 3b41ec913d4869971ca4338366ef02851911804f
 			//scrolling through sprites to place
 			if (Input.GetButtonDown ("Left_Trigger")) {
 				choosePointerNum (-1);
@@ -428,6 +449,16 @@ public class BoardManager : MonoBehaviour {
 		}
 		else {
 			//test power-ups
+<<<<<<< HEAD
+			if (Input.GetButtonDown ("Y_Button"))
+				LockGridCell ();
+			if (Input.GetButtonDown ("B_Button"))
+				LionScare ();
+		}
+	}
+
+
+=======
 			if (Input.GetButtonDown ("B_Button"))
 				LionScare ();
 			if (Input.GetButtonDown ("Y_Button"))
@@ -435,6 +466,7 @@ public class BoardManager : MonoBehaviour {
 		}
 	}
 
+>>>>>>> 3b41ec913d4869971ca4338366ef02851911804f
 	public int pointerNumber(){
 		return pointerNum;
 	}

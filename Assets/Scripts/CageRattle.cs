@@ -5,7 +5,7 @@ using UnityEngine;
 public class CageRattle : MonoBehaviour {
 	int direction = 1;
 	float rotate = 0;
-	float time = 20;
+	float time = 30;
 	int bound = 5;
 	int flip = 0;
 	// Use this for initialization
@@ -17,9 +17,9 @@ public class CageRattle : MonoBehaviour {
 	void Update () {
 		time -= Time.deltaTime;
 		if (time > 0) {
-			if (time > 10 && time < 15)
+			if (time > 15 && time < 25)
 				rotate = .3f;
-			else if (time > 5 && time < 10)
+			else if (time > 5 && time < 15)
 			{
 				rotate = .6f;
 				bound = 6;
