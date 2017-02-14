@@ -53,6 +53,9 @@ public class BoardManager : MonoBehaviour {
 
 	private int pointerNum;
 	public GameObject numberBar;
+	public GameObject powerupBar;
+	public GameObject[] powerupSprites; 
+	private List<GameObject> powerups;
 
 	private int randomRow;
 	private int randomCol;
@@ -83,7 +86,8 @@ public class BoardManager : MonoBehaviour {
 		{"place", KeyCode.Space},
 		{"chooseUp", KeyCode.N},
 		{"chooseDown", KeyCode.B},
-		{"lock", KeyCode.LeftShift}
+		{"lock", KeyCode.LeftShift},
+		{"activate", KeyCode.M}
 	};
 
 	Dictionary<string, KeyCode> p2Controls = 
@@ -95,11 +99,14 @@ public class BoardManager : MonoBehaviour {
 		{"place", KeyCode.R},
 		{"chooseUp", KeyCode.Y},
 		{"chooseDown", KeyCode.T},
-		{"lock", KeyCode.RightShift}
+		{"lock", KeyCode.RightShift},
+		{"activate", KeyCode.U}
 	};
 
 	void Awake () {
 		board = new GameObject[rows, columns];
+
+		powerups = new List<GameObject> (); 
 
 		spriteScale = sampleSprite.transform.localScale.x;
 		boardScale = GetComponent<SpriteRenderer> ().transform.localScale.x;
@@ -196,13 +203,22 @@ public class BoardManager : MonoBehaviour {
 				//we are 1-indexing
 				choosePointerNum(-1);
 
-			} else if (Input.GetKeyDown (controls ["chooseUp"])) {
+			} 
+			else if (Input.GetKeyDown (controls ["chooseUp"])) {
 				//make sure to wrap around # of rows/columns, then add 1 since
 				//we are 1-indexing
 				choosePointerNum(1);
+			} 
+			else if (Input.GetKeyDown (controls ["activate"]) && powerups.Count > 0) {
+				GameObject temp = powerups [0];
+				((Powerup) temp.GetComponent<Powerup>()).Activate (); //call the activation method for powerup
+				powerups.Remove (temp); //delete and destroy powerup
+				Destroy (temp); 
 			}
 
+
 			if (TimerBar.GetComponent<Timer>().IsPoweredUp() == true) {
+<<<<<<< HEAD
 				CastPowerUp ();
 			}
 
@@ -215,8 +231,14 @@ public class BoardManager : MonoBehaviour {
 				LionScare();
 			}
 				
+=======
+				if (isP1)
+					GainPowerUp ();
+			}
+>>>>>>> bb6d9dba720a7b61421cb5f2788050cb48a1f7d4
 			if (Input.GetKeyDown (controls ["lock"])) {
-				LockGridCell ();
+				//LockGridCell ();
+				GainPowerUp();
 			} 
 				
 			//REMEMBER TO DELETE THIS
@@ -236,6 +258,17 @@ public class BoardManager : MonoBehaviour {
 			stunTime -= Time.deltaTime;
 			if (stunTime < 0)
 				stunned = false;
+		}
+
+		updatePowerupBar ();
+	}
+
+	private void updatePowerupBar(){
+		GameObject temp;
+		for (int i = 0; i < powerups.Count; i++) {
+			temp = powerupBar.transform.GetChild (i).gameObject;
+			powerups [i].transform.parent = temp.transform; 
+			powerups [i].transform.localPosition = Vector3.zero;
 		}
 	}
 		
@@ -388,6 +421,14 @@ public class BoardManager : MonoBehaviour {
 			SquidInk ();
 	}
 
+	public void GainPowerUp(){
+		//cant have more than 4 powerups at a time
+		if (powerups.Count >= 4)
+			return;
+		GameObject p = Instantiate (powerupSprites [0], gameObject.transform);
+		powerups.Add (p);
+	}
+
 	private bool Check(){
 		return (answer [pointerRow, pointerCol] - 1 == pointerNum);
 	}
@@ -416,7 +457,10 @@ public class BoardManager : MonoBehaviour {
 	}
 
 
+<<<<<<< HEAD
 	//XBOX CONTROLLER CONTROLS
+=======
+>>>>>>> bb6d9dba720a7b61421cb5f2788050cb48a1f7d4
 	private void P1XBoxControls()
 	{
 		if (isP1) {
@@ -446,6 +490,10 @@ public class BoardManager : MonoBehaviour {
 			if (Input.GetButtonDown ("A_Button"))
 				Place ();
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> bb6d9dba720a7b61421cb5f2788050cb48a1f7d4
 			//scrolling through sprites to place
 			if (Input.GetAxis ("Left_Trigger") > .8f && !justMovedLeftTrigger)
 			{
@@ -466,6 +514,7 @@ public class BoardManager : MonoBehaviour {
 		}
 		else {
 			//test power-ups
+<<<<<<< HEAD
 			if (Input.GetButtonDown ("Y_Button"))
 				SquidInk ();
 			if (Input.GetButtonDown ("B_Button"))
@@ -473,6 +522,14 @@ public class BoardManager : MonoBehaviour {
 		}
 	}
 
+=======
+			if (Input.GetButtonDown ("B_Button"))
+				LionScare ();
+			if (Input.GetButtonDown ("Y_Button"))
+				LockGridCell ();
+		}
+	}
+>>>>>>> bb6d9dba720a7b61421cb5f2788050cb48a1f7d4
 	public int pointerNumber(){
 		return pointerNum;
 	}
