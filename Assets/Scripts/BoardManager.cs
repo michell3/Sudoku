@@ -244,7 +244,9 @@ public class BoardManager : MonoBehaviour {
 
 				//REMEMBER TO DELETE THIS
 				if (Input.GetKeyDown (KeyCode.G)) {
-					cb.LionAttack ();
+					cb.ThrowDart ();
+//					cb.ThrowLock ();
+//					cb.LionAttack ();
 //					cb.SquidAttack();
 //					Stun (2);
 //					Restart ();
@@ -337,7 +339,7 @@ public class BoardManager : MonoBehaviour {
 	}
 
 	// locks the grid cell that is selected
-	private void LockGridCell() {
+	public void LockGridCell() {
 	
 		if (openGrid () != 0) {
 			randomRow = Random.Range (0, 9);
@@ -360,7 +362,7 @@ public class BoardManager : MonoBehaviour {
 	}
 
 	// stuns a player, either yourself if you choose an incorrect cell or the enemy if you ge tthe stun power-up
-	private void Stun(int seconds) {
+	public void Stun(int seconds) {
 
 		GridShake gridShake = GetComponent<GridShake> ();
 		gridShake.Play (seconds);

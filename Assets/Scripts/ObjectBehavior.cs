@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AnimalBehavior: MonoBehaviour {
+public class ObjectBehavior : MonoBehaviour {
 
 	public GameObject Enemy;
 	private CharacterBehavior enemyChar;
@@ -10,22 +10,22 @@ public class AnimalBehavior: MonoBehaviour {
 	public GameObject EnemyBoard;
 	private BoardManager bm;
 
-	public bool IsLion = true;
-	private bool isLion;
+	public bool IsLock = true;
+	private bool isLock;
 
 	void Start () {
 		enemyChar = Enemy.GetComponent<CharacterBehavior> ();
 		bm = EnemyBoard.GetComponent<BoardManager> ();
-		isLion = IsLion;
+		isLock = IsLock;
 	}
 
 	void AttackBoard () {
-		if (isLion) {
-			bm.LionScare ();
+		if (isLock) {
+			bm.LockGridCell ();
 			enemyChar.GetHurt (2f);
 		} else {
-			bm.SquidInk ();
-			enemyChar.GetHurt (2f);
+			bm.Stun (5);
+			enemyChar.GetHurt (5f);
 		}
 	}
 }

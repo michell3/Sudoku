@@ -4,32 +4,34 @@ using UnityEngine;
 
 public class CharacterBehavior : MonoBehaviour {
 
-	public GameObject Enemy;
-	private CharacterBehavior enemyChar;
-
 	public GameObject Board;
-	private BoardManager bm;
 
 	public GameObject Lion;
 	private Animator lionAnim;
 	public GameObject Squid;
 	private Animator squidAnim;
 
+	public GameObject Lock;
+	private Animator lockAnim;
+	public GameObject Dart;
+	private Animator dartAnim;
+
 	private bool isHurt;
 	public float HurtTime = 2f;
 	private float hurtTime;
 	private float hurtTimer = 0f;
 
-	Animator anim;
+	private Animator anim;
 
 	void Awake () {
-		enemyChar = Enemy.GetComponent<CharacterBehavior> ();
+		
 		anim = GetComponent<Animator> ();
-
-		bm = Board.GetComponent<BoardManager> ();
 
 		lionAnim = Lion.GetComponent<Animator> ();
 		squidAnim = Squid.GetComponent<Animator> ();
+
+		lockAnim = Lock.GetComponent<Animator> ();
+		dartAnim = Dart.GetComponent<Animator> ();
 
 		hurtTime = HurtTime;
 		hurtTimer = hurtTime;
@@ -60,8 +62,16 @@ public class CharacterBehavior : MonoBehaviour {
 		anim.SetTrigger ("isThrowingDart");
 	}
 
+	public void ActivateDart() {
+		dartAnim.SetTrigger ("isThrown");
+	}
+
 	public void ThrowLock() {
 		anim.SetTrigger ("isThrowingLock");
+	}
+
+	public void ActivateLock() {
+		lockAnim.SetTrigger ("isThrown");
 	}
 
 	public void Winner() {
