@@ -241,6 +241,7 @@ public class BoardManager : MonoBehaviour {
 					if (isP1)
 						GainPowerUp ();
 				}
+			}
 
 				if (Input.GetKeyDown (controls ["lock"])) {
 					//LockGridCell ();
@@ -358,10 +359,10 @@ public class BoardManager : MonoBehaviour {
 	}
 
 	// makes a cell not visible when opponent gets squid ink ability
-	private void SquidInk() {
-	
-		randomRow = Random.Range (0, 7);
-		randomCol = Random.Range (0, 7);
+	private void SquidInk()
+	{
+		randomRow = Random.Range (1, 7);
+		randomCol = Random.Range (1, 7);
 		GameObject squidInk = Instantiate (inkPrefab);
 		squidInk.transform.position = board [randomRow,
 			randomCol].GetComponent<Cell> ().transform.position;
@@ -462,10 +463,10 @@ public class BoardManager : MonoBehaviour {
 		}
 	}
 
-	//XBOX CONTROLLER CONTROLS
 
+	//XBOX CONTROLLER CONTROLS
 	private void P1XBoxControls() {
-	
+
 		if (isP1) {
 			//movement around the grid using Analog Stick
 			if (Input.GetAxis ("J_MainHorizontal") > .5 && !justMovedHorizontal) {
@@ -520,6 +521,7 @@ public class BoardManager : MonoBehaviour {
 	}
 
 	public void GameOver(bool isWinner) {
+		
 		isGameOver = true;
 
 		if (isWinner) {
