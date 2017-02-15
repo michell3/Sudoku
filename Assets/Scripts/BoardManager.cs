@@ -238,8 +238,7 @@ public class BoardManager : MonoBehaviour {
 				}
 
 				if (TimerBar.GetComponent<Timer> ().IsPoweredUp () == true) {
-					if (isP1)
-						CastPowerUp ();
+					CastPowerUp ();
 				}
 
 				//REMEMBER TO DELETE THIS
@@ -256,7 +255,6 @@ public class BoardManager : MonoBehaviour {
 				}
 
 				if (Input.GetKeyDown (controls ["lock"])) {
-					//LockGridCell ();
 					GainPowerUp ();
 				} 
 
@@ -363,7 +361,7 @@ public class BoardManager : MonoBehaviour {
 
 	// stuns a player, either yourself if you choose an incorrect cell or the enemy if you ge tthe stun power-up
 	public void Stun(int seconds) {
-
+		cb.GetHurt ((float)seconds);
 		GridShake gridShake = GetComponent<GridShake> ();
 		gridShake.Play (seconds);
 		stunned = true;
@@ -381,7 +379,6 @@ public class BoardManager : MonoBehaviour {
 	}
 
 	// a lion runs across a certain row and scares off all the animals from that row
-	//MAKE IT SO THAT THE SPRITES ON THE POSITIONS ARE DESTROYED
 	public void LionScare() {
 	
 		if (animalCount() < 5)
@@ -403,7 +400,6 @@ public class BoardManager : MonoBehaviour {
 				board [randomRow, randomCol].GetComponent<Cell> ().Val = -1;
 				foreach (GameObject sprite in board[randomRow,
 						 	randomCol].GetComponent<Cell>().childList) {
-					//Destroy (sprite);
 					descendList.Add(sprite);
 				}
 				lionScareCount -= 1;
@@ -431,15 +427,13 @@ public class BoardManager : MonoBehaviour {
 	
 		power = Random.Range (1, 5);
 		if (power == 1)
-			EnemyBoard.GetComponent<BoardManager>().Stun (5);
+			cb.ThrowDart ();
 		else if (power == 2)
-			//LockGridCell ();TimerBar.GetComponent<Timer>().IncreaseTimer();
-			EnemyBoard.GetComponent<BoardManager>().LockGridCell();
+			cb.ThrowLock();
 		else if (power == 3)
-			//LionScare ();
-			EnemyBoard.GetComponent<BoardManager>().LionScare();
+			cb.LionAttack();
 		else if (power == 4)
-			EnemyBoard.GetComponent<BoardManager>().SquidInk ();
+			cb.SquidAttack();
 	}
 
 	public void GainPowerUp() {
@@ -474,6 +468,7 @@ public class BoardManager : MonoBehaviour {
 		//if you try to place something in a locked grid 
 		else if (selectedCell.GetComponent<Cell> ().Locked)  {
 			// TODO: some interaction that lets the user know they can't do this
+			Stun (2);
 		}
 		//if placement is incorrect and cell is unlocked
 		else {
