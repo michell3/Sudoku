@@ -200,9 +200,6 @@ public class BoardManager : MonoBehaviour {
 				if (isP1)
 					CastPowerUp ();
 			}
-<<<<<<< HEAD
-
-
 				
 			//REMEMBER TO DELETE THIS
 			if (Input.GetKeyDown (KeyCode.G)) {
@@ -211,19 +208,9 @@ public class BoardManager : MonoBehaviour {
 				LionScare();
 			}
 
-=======
 			if (Input.GetKeyDown (controls ["lock"])) {
 				LockGridCell ();
 			} 
-				
-			//REMEMBER TO DELETE THIS
-			if (Input.GetKeyDown (KeyCode.G)) {
-//				PowerUp ();
-//				LockGridCell();
-//				SquidInk();
-				LionScare();
-			}
->>>>>>> 3b41ec913d4869971ca4338366ef02851911804f
 
 			P1XBoxControls ();
 		} 
@@ -417,8 +404,6 @@ public class BoardManager : MonoBehaviour {
 		}
 	}
 
-
-<<<<<<< HEAD
 	//XBOX CONTROLLER CONTROLS
 	private void P1XBoxControls()
 	{
@@ -437,9 +422,6 @@ public class BoardManager : MonoBehaviour {
 			if (Input.GetButtonDown ("A_Button"))
 				Place ();
 
-
-=======
->>>>>>> 3b41ec913d4869971ca4338366ef02851911804f
 			//scrolling through sprites to place
 			if (Input.GetButtonDown ("Left_Trigger")) {
 				choosePointerNum (-1);
@@ -449,16 +431,6 @@ public class BoardManager : MonoBehaviour {
 		}
 		else {
 			//test power-ups
-<<<<<<< HEAD
-			if (Input.GetButtonDown ("Y_Button"))
-				LockGridCell ();
-			if (Input.GetButtonDown ("B_Button"))
-				LionScare ();
-		}
-	}
-
-
-=======
 			if (Input.GetButtonDown ("B_Button"))
 				LionScare ();
 			if (Input.GetButtonDown ("Y_Button"))
@@ -466,7 +438,6 @@ public class BoardManager : MonoBehaviour {
 		}
 	}
 
->>>>>>> 3b41ec913d4869971ca4338366ef02851911804f
 	public int pointerNumber(){
 		return pointerNum;
 	}
