@@ -230,7 +230,9 @@ public class BoardManager : MonoBehaviour {
 					//we are 1-indexing
 					choosePointerNum (1);
 
-				} else if (Input.GetKeyDown (controls ["activate"]) && powerups.Count > 0) {
+				} else if (Input.GetKeyDown (controls ["activate"]) && 
+						   powerups.Count > 0 &&
+						   !stunned) {
 					GameObject temp = powerups [0];
 					((Powerup)temp.GetComponent<Powerup> ()).Activate (cb); //call the activation method for powerup
 					powerups.Remove (temp); //delete and destroy powerup
