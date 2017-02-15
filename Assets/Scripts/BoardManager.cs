@@ -17,8 +17,14 @@ public class BoardManager : MonoBehaviour {
 	// Timer gameobject
 	public GameObject TimerBar;
 
-	// Board gameobject
+	// Board gameobjects
 	private GameObject[,] board;
+	public GameObject EnemyBoard;
+	private GameObject enemyBoard;
+
+	// Display gameobjects
+	public GameObject LoseBoard;
+	public GameObject WinBoard;
 
 	// Grid variables
 	public int columns = 9;
@@ -43,6 +49,8 @@ public class BoardManager : MonoBehaviour {
 
 	// Game state variables
 	public bool isP1 = true;
+	private int numAnimals = 0;
+	private bool isGameOver = false;
 
 	private int randomIndex;
 
@@ -104,10 +112,13 @@ public class BoardManager : MonoBehaviour {
 	};
 
 	void Awake () {
+		
 		board = new GameObject[rows, columns];
+		enemyBoard = EnemyBoard;
 
 		powerups = new List<GameObject> (); 
 
+		// Variables for placing animals on grid
 		spriteScale = sampleSprite.transform.localScale.x;
 		boardScale = GetComponent<SpriteRenderer> ().transform.localScale.x;
 		spacing = Spacing * spriteScale * boardScale;
@@ -123,6 +134,7 @@ public class BoardManager : MonoBehaviour {
 
 		DisplayBoard ();
 
+		// Player controls
 		if (isP1)
 			controls = p1Controls;
 		else
@@ -130,6 +142,8 @@ public class BoardManager : MonoBehaviour {
 	}
 
 	void DisplayBoard () {
+
+		// Create cells that contain all animal sprites
 		float x, y;
 		for (int c = 0; c < 9; c++) {
 			for (int r = 0; r < 9; r++) {
@@ -141,17 +155,21 @@ public class BoardManager : MonoBehaviour {
 				board [r, c] = instance;
 			}
 		}
-		Select (0, 0);
-		pointerNum = 0;  //what the meanign of pointerNUM: the actual number users put in the cell.
 
+		Select (8, 0);  // select upper left cell
+		pointerNum = 0; // the number users put in the cell
+
+		// choose a random puzzle
 		randomIndex = (int)Mathf.Floor (Random.value * 100f + 1f);
 		answer = RefBoard.getAnswerBoard(randomIndex);
 		show = RefBoard.getShowBoard (randomIndex);
 
+		// update the sprites on the board
 		for (int c = 0; c < 9; c++) {
 			for (int r = 0; r < 9; r++) {
 				if (show [r, c] > 0) {
 					board [r, c].GetComponent<Cell> ().Val = answer [r, c] - 1;
+					numAnimals++;
 				}
 			}
 		}
@@ -172,7 +190,6 @@ public class BoardManager : MonoBehaviour {
 		selectedCell.GetComponent<Cell>().Selected = true; 
 
 		//reset location of the pointer
-
 		pointer.transform.position = selectedCell.transform.position;
 		pointerCol = col;
 		pointerRow = row;
@@ -182,67 +199,68 @@ public class BoardManager : MonoBehaviour {
 		//makes animals feared by lion fall
 		animalDescend ();
 
-		if (!stunned) {
-			//moving the selector. 
-			if (Input.GetKeyDown (controls ["down"])) {
-				Select (pointerRow - 1, pointerCol);
-			} else if (Input.GetKeyDown (controls ["up"])) {
-				Select (pointerRow + 1, pointerCol);
-			} else if (Input.GetKeyDown (controls ["left"])) {
-				Select (pointerRow, pointerCol - 1);
-			} else if (Input.GetKeyDown (controls ["right"])) {
-				Select (pointerRow, pointerCol + 1);
-			}
+		if (!isGameOver) {
 
-			if (Input.GetKeyDown (controls ["place"])) {
-				Place ();
-			} 
-			else if (Input.GetKeyDown (controls ["chooseDown"])) {
-				//make sure to wrap around # of rows/columns, then add 1 since
-				//we are 1-indexing
-				choosePointerNum(-1);
+			if (!stunned) {
+				//moving the selector. 
+				if (Input.GetKeyDown (controls ["down"])) {
+					Select (pointerRow - 1, pointerCol);
+				} else if (Input.GetKeyDown (controls ["up"])) {
+					Select (pointerRow + 1, pointerCol);
+				} else if (Input.GetKeyDown (controls ["left"])) {
+					Select (pointerRow, pointerCol - 1);
+				} else if (Input.GetKeyDown (controls ["right"])) {
+					Select (pointerRow, pointerCol + 1);
+				}
 
-			} 
-			else if (Input.GetKeyDown (controls ["chooseUp"])) {
-				//make sure to wrap around # of rows/columns, then add 1 since
-				//we are 1-indexing
-				choosePointerNum(1);
-			} 
-			else if (Input.GetKeyDown (controls ["activate"]) && powerups.Count > 0) {
-				GameObject temp = powerups [0];
-				((Powerup) temp.GetComponent<Powerup>()).Activate (); //call the activation method for powerup
-				powerups.Remove (temp); //delete and destroy powerup
-				Destroy (temp); 
-			}
+				if (Input.GetKeyDown (controls ["place"])) {
+					Place ();
+				} else if (Input.GetKeyDown (controls ["chooseDown"])) {
+					//make sure to wrap around # of rows/columns, then add 1 since
+					//we are 1-indexing
+					choosePointerNum (-1);
 
+				} else if (Input.GetKeyDown (controls ["chooseUp"])) {
+					//make sure to wrap around # of rows/columns, then add 1 since
+					//we are 1-indexing
+					choosePointerNum (1);
+				} else if (Input.GetKeyDown (controls ["activate"]) && powerups.Count > 0) {
+					GameObject temp = powerups [0];
+					((Powerup)temp.GetComponent<Powerup> ()).Activate (); //call the activation method for powerup
+					powerups.Remove (temp); //delete and destroy powerup
+					Destroy (temp); 
+				}
 
-			if (TimerBar.GetComponent<Timer>().IsPoweredUp() == true) {
-				if (isP1)
-					CastPowerUp ();
-			}
+				if (TimerBar.GetComponent<Timer> ().IsPoweredUp () == true) {
+					if (isP1)
+						CastPowerUp ();
+				}
 
-			//REMEMBER TO DELETE THIS
-			if (Input.GetKeyDown (KeyCode.G)) {
-				if (isP1)
+				//REMEMBER TO DELETE THIS
+				if (Input.GetKeyDown (KeyCode.G)) {
+					if (isP1)
+						GainPowerUp ();
+				}
+
+				if (Input.GetKeyDown (controls ["lock"])) {
+					//LockGridCell ();
 					GainPowerUp ();
-			}
+				} 
 
-			if (Input.GetKeyDown (controls ["lock"])) {
-				//LockGridCell ();
-				GainPowerUp();
+				P1XBoxControls ();
 			} 
 
-			P1XBoxControls ();
-		} 
+			//allows you to move when you are not stunned
+			else {
+				stunTime -= Time.deltaTime;
+				if (stunTime < 0)
+					stunned = false;
+			}
 
-		//allows you to move when you are not stunned
-		else {
-			stunTime -= Time.deltaTime;
-			if (stunTime < 0)
-				stunned = false;
+			updatePowerupBar ();
+		} else {
+			// GameOver UI controls should be implemented here
 		}
-
-		updatePowerupBar ();
 	}
 
 	private void updatePowerupBar() {
@@ -378,14 +396,13 @@ public class BoardManager : MonoBehaviour {
 		}
 	}
 
-	//makes the animals fall when they are scared by the lion, then destroys them
+	// makes the animals fall when they are scared by the lion, then destroys them
 	private void animalDescend() {
 	
 		foreach (GameObject animal in descendList) {
 		
 			animal.transform.Translate (0, -.1f, 0);
-			if (animal.transform.position.y < -6) 
-			{
+			if (animal.transform.position.y < -6) {
 				descendList.Remove (animal);
 				Destroy (animal);
 			}
@@ -422,21 +439,25 @@ public class BoardManager : MonoBehaviour {
 	
 		//if placement is correct and cell isn't locked 
 		if (!selectedCell.GetComponent<Cell> ().Locked &&
-			selectedCell.GetComponent<Cell> ().Val < 0 && Check())
-		{
+			selectedCell.GetComponent<Cell> ().Val < 0 && Check()) {
+
 			selectedCell.GetComponent<Cell> ().Val = pointerNum;
 
 			// Call timer bar object
 			TimerBar.GetComponent<Timer>().IncreaseTimer();
+
+			numAnimals++;
+
+			if (numAnimals == 81) {
+				GameOver (true);
+			}
 		}
 		//if you try to place something in a locked grid 
-		else if (selectedCell.GetComponent<Cell> ().Locked) 
-		{
+		else if (selectedCell.GetComponent<Cell> ().Locked)  {
 			// TODO: some interaction that lets the user know they can't do this
 		}
 		//if placement is incorrect and cell is unlocked
-		else
-		{
+		else {
 			Stun (2);
 		}
 	}
@@ -496,5 +517,18 @@ public class BoardManager : MonoBehaviour {
 
 	public int pointerNumber() {
 		return pointerNum;
+	}
+
+	public void GameOver(bool isWinner) {
+		isGameOver = true;
+
+		if (isWinner) {
+			BoardManager enemyBM = enemyBoard.GetComponent<BoardManager> ();
+			enemyBM.GameOver (false);
+
+			Instantiate (WinBoard);
+		} else {
+			Instantiate (LoseBoard);
+		}
 	}
 }
