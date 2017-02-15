@@ -3,17 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class CageRattle : MonoBehaviour {
+	
 	int direction = 1;
 	float rotate = 0;
 	float time = 30;
 	int bound = 5;
 	int flip = 0;
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
+
 	void Update () {
 		time -= Time.deltaTime;
 		if (time > 0) {

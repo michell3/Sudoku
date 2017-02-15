@@ -182,7 +182,6 @@ public class BoardManager : MonoBehaviour {
 		//makes animals feared by lion fall
 		animalDescend ();
 
-
 		if (!stunned) {
 			//moving the selector. 
 			if (Input.GetKeyDown (controls ["down"])) {
@@ -218,6 +217,7 @@ public class BoardManager : MonoBehaviour {
 
 
 			if (TimerBar.GetComponent<Timer>().IsPoweredUp() == true) {
+<<<<<<< HEAD
 				CastPowerUp ();
 			}
 				
@@ -232,25 +232,28 @@ public class BoardManager : MonoBehaviour {
 				if (isP1)
 					GainPowerUp ();
 			
+=======
+				if (isP1)
+					CastPowerUp ();
+			}
+
+			//REMEMBER TO DELETE THIS
+			if (Input.GetKeyDown (KeyCode.G)) {
+				if (isP1)
+					GainPowerUp ();
+			}
+
+>>>>>>> 6f285196683dba61d0c8de85eec68f7c5db40f9e
 			if (Input.GetKeyDown (controls ["lock"])) {
 				//LockGridCell ();
 				GainPowerUp();
 			} 
-				
-			//REMEMBER TO DELETE THIS
-			if (Input.GetKeyDown (KeyCode.G)) {
-//				PowerUp ();
-//				LockGridCell();
-//				SquidInk();
-				LionScare();
-			}
 
 			P1XBoxControls ();
 
 		}
 		//allows you to move when you are not stunned
-		else
-		{
+		else {
 			stunTime -= Time.deltaTime;
 			if (stunTime < 0)
 				stunned = false;
@@ -259,7 +262,8 @@ public class BoardManager : MonoBehaviour {
 		updatePowerupBar ();
 	}
 
-	private void updatePowerupBar(){
+	private void updatePowerupBar() {
+	
 		GameObject temp;
 		for (int i = 0; i < powerups.Count; i++) {
 			temp = powerupBar.transform.GetChild (i).gameObject;
@@ -268,16 +272,16 @@ public class BoardManager : MonoBehaviour {
 		}
 	}
 		
-	private void choosePointerNum(int move)
-	{
+	private void choosePointerNum(int move) {
+	
 		selectSprite (false); // deselect current sprite
 		pointerNum = ((rows + pointerNum + move) % rows); 
 		selectSprite(true); // select new sprite
 	
 	}
 
-	private void selectSprite(bool select)
-	{
+	private void selectSprite(bool select) {
+	
 		GameObject temp; 
 		Color newColor;
 
@@ -295,11 +299,11 @@ public class BoardManager : MonoBehaviour {
 	}
 
 	//returns how many cells are empty and not locked
-	private int openGrid() 
-	{
+	private int openGrid() {
+	
 		int openCells = 0;
-		for(int r = 0; r < 9; r++){
-			for(int c = 0; c < 9; c++){
+		for(int r = 0; r < 9; r++) {
+			for(int c = 0; c < 9; c++) {
 				if(board[r,c].GetComponent<Cell>().Val == -1 &&
 				   board[r,c].GetComponent<Cell>().Locked == false)
 					openCells += 1;
@@ -309,11 +313,11 @@ public class BoardManager : MonoBehaviour {
 	}
 
 	//counts how many animals are placed on the board
-	private int animalCount()
-	{
+	private int animalCount() {
+	
 		int animals = 0;
-		for(int r = 0; r < 9; r++){
-			for(int c = 0; c < 9; c++){
+		for(int r = 0; r < 9; r++) {
+			for(int c = 0; c < 9; c++) {
 				if(board[r,c].GetComponent<Cell>().Val > -1)
 					animals += 1;
 			}
@@ -322,8 +326,8 @@ public class BoardManager : MonoBehaviour {
 	}
 
 	// locks the grid cell that is selected
-	private void LockGridCell()
-	{
+	private void LockGridCell() {
+	
 		if (openGrid () != 0) {
 			randomRow = Random.Range (0, 9);
 			randomCol = Random.Range (0, 9);
@@ -333,55 +337,63 @@ public class BoardManager : MonoBehaviour {
 				randomCol = Random.Range (0, 9);
 			}
 		}
-		if (board [randomRow, randomCol].GetComponent<Cell> ().Locked == false)
-		{
+		if (board [randomRow, randomCol].GetComponent<Cell> ().Locked == false) {
+		
 			board [randomRow, randomCol].GetComponent<Cell> ().Locked = true;
 			board [randomRow, randomCol].GetComponent<Cell> ().lockTimer = 20;
 			GameObject gridLock = Instantiate (lockPrefab);
-			gridLock.transform.position = (board [randomRow, randomCol].GetComponent<Cell> ().transform.position);
+			gridLock.transform.position = (board [randomRow,
+				randomCol].GetComponent<Cell> ().transform.position);
 			lockList.Add (gridLock);
 		}
 	}
 
 	// stuns a player, either yourself if you choose an incorrct cell or the enemy if you ge tthe stun power-up
-	private void Stun(int seconds)
-	{
+	private void Stun(int seconds) {
+	
 		print ("Stun");
 		stunned = true;
 		stunTime = seconds;
 	}
 
 	// makes a cell not visible when opponent gets squid ink ability
+<<<<<<< HEAD
 	private void SquidInk()
 	{
 		randomRow = Random.Range (1, 7);
 		randomCol = Random.Range (1, 7);
+=======
+	private void SquidInk() {
+	
+		randomRow = Random.Range (0, 7);
+		randomCol = Random.Range (0, 7);
+>>>>>>> 6f285196683dba61d0c8de85eec68f7c5db40f9e
 		GameObject squidInk = Instantiate (inkPrefab);
-		squidInk.transform.position = board [randomRow, randomCol].GetComponent<Cell> ().transform.position;
+		squidInk.transform.position = board [randomRow,
+			randomCol].GetComponent<Cell> ().transform.position;
 	}
 
 	// a lion runs across a certain row and scares off all the animals from that row
 	//MAKE IT SO THAT THE SPRITES ON THE POSITIONS ARE DESTROYED
-	private void LionScare()
-	{
+	private void LionScare() {
+	
 		if (animalCount() < 5)
 			lionScareCount = animalCount ();
 		else
 			lionScareCount = 5;
 
-		if (animalCount () != 0)
-		{
+		if (animalCount () != 0) {
+		
 			while (lionScareCount > 0) {
 				randomRow = Random.Range (0, 9);
 				randomCol = Random.Range (0, 9);
-				while (board [randomRow, randomCol].GetComponent<Cell> ().Val == -1)
-				{
+				while (board [randomRow, randomCol].GetComponent<Cell> ().Val == -1) {
 					randomRow = Random.Range (0, 9);
 					randomCol = Random.Range (0, 9);
 				}
 				board [randomRow, randomCol].GetComponent<Cell> ().Val = -1;
-				foreach (GameObject sprite in board[randomRow,randomCol].GetComponent<Cell>().childList)
-				{
+				foreach (GameObject sprite in board[randomRow,
+						 	randomCol].GetComponent<Cell>().childList) {
 					//Destroy (sprite);
 					descendList.Add(sprite);
 				}
@@ -391,10 +403,10 @@ public class BoardManager : MonoBehaviour {
 	}
 
 	//makes the animals fall when they are scared by the lion, then destroys them
-	private void animalDescend()
-	{
-		foreach (GameObject animal in descendList)
-		{
+	private void animalDescend() {
+	
+		foreach (GameObject animal in descendList) {
+		
 			animal.transform.Translate (0, -.1f, 0);
 			if (animal.transform.position.y < -6) 
 			{
@@ -406,6 +418,7 @@ public class BoardManager : MonoBehaviour {
 
 	// when your power-up meter is full, select a random power
 	public void CastPowerUp() {
+	
 		power = Random.Range (1, 5);
 		if (power == 1)
 			Stun (5);
@@ -417,7 +430,7 @@ public class BoardManager : MonoBehaviour {
 			SquidInk ();
 	}
 
-	public void GainPowerUp(){
+	public void GainPowerUp() {
 		//cant have more than 4 powerups at a time
 		if (powerups.Count >= 4)
 			return;
@@ -425,12 +438,12 @@ public class BoardManager : MonoBehaviour {
 		powerups.Add (p);
 	}
 
-	private bool Check(){
+	private bool Check() {
 		return (answer [pointerRow, pointerCol] - 1 == pointerNum);
 	}
 
-	private void Place()
-	{
+	private void Place() {
+	
 		//if placement is correct and cell isn't locked 
 		if (!selectedCell.GetComponent<Cell> ().Locked &&
 			selectedCell.GetComponent<Cell> ().Val < 0 && Check())
@@ -452,11 +465,18 @@ public class BoardManager : MonoBehaviour {
 		}
 	}
 
+<<<<<<< HEAD
 
 
 	//XBOX CONTROLLER CONTROLS
 	private void P1XBoxControls()
 	{
+=======
+	//XBOX CONTROLLER CONTROLS
+
+	private void P1XBoxControls() {
+	
+>>>>>>> 6f285196683dba61d0c8de85eec68f7c5db40f9e
 		if (isP1) {
 			//movement around the grid using Analog Stick
 			if (Input.GetAxis ("J_MainHorizontal") > .5 && !justMovedHorizontal) {
@@ -479,19 +499,15 @@ public class BoardManager : MonoBehaviour {
 			if (Input.GetAxis ("J_MainVertical") == 0)
 				justMovedVertical = false;
 
-
 			//placing the sprites
 			if (Input.GetButtonDown ("A_Button"))
 				Place ();
 
 			//scrolling through sprites to place
-			if (Input.GetAxis ("Left_Trigger") > .8f && !justMovedLeftTrigger)
-			{
+			if (Input.GetAxis ("Left_Trigger") > .8f && !justMovedLeftTrigger) {
 				justMovedLeftTrigger = true;
 				choosePointerNum (-1);
-			} 
-			else if (Input.GetAxis ("Right_Trigger") > .8f && !justMovedRightTrigger) 
-			{
+			} else if (Input.GetAxis ("Right_Trigger") > .8f && !justMovedRightTrigger) {
 				justMovedRightTrigger = true;
 				choosePointerNum (1);
 			}	
@@ -500,9 +516,8 @@ public class BoardManager : MonoBehaviour {
 				justMovedRightTrigger = false;
 			if (Input.GetAxis ("Left_Trigger") < .2f)
 				justMovedLeftTrigger = false;
-
-		}
-		else {
+		
+		} else {
 			//test power-ups
 			if (Input.GetButtonDown ("Y_Button"))
 				SquidInk ();
@@ -510,7 +525,12 @@ public class BoardManager : MonoBehaviour {
 				LionScare ();
 		}
 	}
+<<<<<<< HEAD
 	public int pointerNumber(){
+=======
+
+	public int pointerNumber() {
+>>>>>>> 6f285196683dba61d0c8de85eec68f7c5db40f9e
 		return pointerNum;
 	}
 }
