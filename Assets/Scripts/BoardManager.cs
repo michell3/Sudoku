@@ -232,7 +232,7 @@ public class BoardManager : MonoBehaviour {
 
 				} else if (Input.GetKeyDown (controls ["activate"]) && powerups.Count > 0) {
 					GameObject temp = powerups [0];
-					((Powerup)temp.GetComponent<Powerup> ()).Activate (); //call the activation method for powerup
+					((Powerup)temp.GetComponent<Powerup> ()).Activate (cb); //call the activation method for powerup
 					powerups.Remove (temp); //delete and destroy powerup
 					Destroy (temp); 
 				}
@@ -243,9 +243,9 @@ public class BoardManager : MonoBehaviour {
 				}
 
 				//REMEMBER TO DELETE THIS
-				if (Input.GetKeyDown (KeyCode.G)) {
-					cb.ThrowDart ();
-//					cb.ThrowLock ();
+				if (Input.GetKeyDown (KeyCode.G) && isP1) {
+					//cb.ThrowDart ();
+					cb.ThrowLock ();
 //					cb.LionAttack ();
 //					cb.SquidAttack();
 //					Stun (2);
@@ -446,7 +446,8 @@ public class BoardManager : MonoBehaviour {
 		//cant have more than 4 powerups at a time
 		if (powerups.Count >= 4)
 			return;
-		GameObject p = Instantiate (powerupSprites [0], gameObject.transform);
+		int powerupIndex = Random.Range(0, powerupSprites.Length); 
+		GameObject p = Instantiate (powerupSprites [powerupIndex], gameObject.transform);
 		powerups.Add (p);
 	}
 
