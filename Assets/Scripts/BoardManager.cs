@@ -218,11 +218,8 @@ public class BoardManager : MonoBehaviour {
 
 
 			if (TimerBar.GetComponent<Timer>().IsPoweredUp() == true) {
-<<<<<<< HEAD
 				CastPowerUp ();
 			}
-
-
 				
 			//REMEMBER TO DELETE THIS
 			if (Input.GetKeyDown (KeyCode.G)) {
@@ -231,11 +228,10 @@ public class BoardManager : MonoBehaviour {
 				LionScare();
 			}
 				
-=======
+
 				if (isP1)
 					GainPowerUp ();
-			}
->>>>>>> bb6d9dba720a7b61421cb5f2788050cb48a1f7d4
+			
 			if (Input.GetKeyDown (controls ["lock"])) {
 				//LockGridCell ();
 				GainPowerUp();
@@ -250,8 +246,8 @@ public class BoardManager : MonoBehaviour {
 			}
 
 			P1XBoxControls ();
-		} 
 
+		}
 		//allows you to move when you are not stunned
 		else
 		{
@@ -358,8 +354,8 @@ public class BoardManager : MonoBehaviour {
 	// makes a cell not visible when opponent gets squid ink ability
 	private void SquidInk()
 	{
-		randomRow = Random.Range (0, 7);
-		randomCol = Random.Range (0, 7);
+		randomRow = Random.Range (1, 7);
+		randomCol = Random.Range (1, 7);
 		GameObject squidInk = Instantiate (inkPrefab);
 		squidInk.transform.position = board [randomRow, randomCol].GetComponent<Cell> ().transform.position;
 	}
@@ -457,10 +453,8 @@ public class BoardManager : MonoBehaviour {
 	}
 
 
-<<<<<<< HEAD
+
 	//XBOX CONTROLLER CONTROLS
-=======
->>>>>>> bb6d9dba720a7b61421cb5f2788050cb48a1f7d4
 	private void P1XBoxControls()
 	{
 		if (isP1) {
@@ -490,10 +484,6 @@ public class BoardManager : MonoBehaviour {
 			if (Input.GetButtonDown ("A_Button"))
 				Place ();
 
-<<<<<<< HEAD
-=======
-
->>>>>>> bb6d9dba720a7b61421cb5f2788050cb48a1f7d4
 			//scrolling through sprites to place
 			if (Input.GetAxis ("Left_Trigger") > .8f && !justMovedLeftTrigger)
 			{
@@ -514,22 +504,12 @@ public class BoardManager : MonoBehaviour {
 		}
 		else {
 			//test power-ups
-<<<<<<< HEAD
 			if (Input.GetButtonDown ("Y_Button"))
 				SquidInk ();
 			if (Input.GetButtonDown ("B_Button"))
 				LionScare ();
 		}
 	}
-
-=======
-			if (Input.GetButtonDown ("B_Button"))
-				LionScare ();
-			if (Input.GetButtonDown ("Y_Button"))
-				LockGridCell ();
-		}
-	}
->>>>>>> bb6d9dba720a7b61421cb5f2788050cb48a1f7d4
 	public int pointerNumber(){
 		return pointerNum;
 	}
