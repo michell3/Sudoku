@@ -337,7 +337,7 @@ public class BoardManager : MonoBehaviour {
 	}
 
 	// locks the grid cell that is selected
-	private void LockGridCell() {
+	public void LockGridCell() {
 	
 		if (openGrid () != 0) {
 			randomRow = Random.Range (0, 9);
@@ -360,7 +360,7 @@ public class BoardManager : MonoBehaviour {
 	}
 
 	// stuns a player, either yourself if you choose an incorrect cell or the enemy if you ge tthe stun power-up
-	private void Stun(int seconds) {
+	public void Stun(int seconds) {
 
 		GridShake gridShake = GetComponent<GridShake> ();
 		gridShake.Play (seconds);
@@ -429,13 +429,15 @@ public class BoardManager : MonoBehaviour {
 	
 		power = Random.Range (1, 5);
 		if (power == 1)
-			Stun (5);
+			EnemyBoard.GetComponent<BoardManager>().Stun (5);
 		else if (power == 2)
-			LockGridCell ();
+			//LockGridCell ();TimerBar.GetComponent<Timer>().IncreaseTimer();
+			EnemyBoard.GetComponent<BoardManager>().LockGridCell();
 		else if (power == 3)
-			LionScare ();
+			//LionScare ();
+			EnemyBoard.GetComponent<BoardManager>().LionScare();
 		else if (power == 4)
-			SquidInk ();
+			EnemyBoard.GetComponent<BoardManager>().SquidInk ();
 	}
 
 	public void GainPowerUp() {
