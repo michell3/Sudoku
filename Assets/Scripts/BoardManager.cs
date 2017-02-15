@@ -244,7 +244,9 @@ public class BoardManager : MonoBehaviour {
 
 				//REMEMBER TO DELETE THIS
 				if (Input.GetKeyDown (KeyCode.G)) {
-					cb.LionAttack ();
+					cb.ThrowDart ();
+//					cb.ThrowLock ();
+//					cb.LionAttack ();
 //					cb.SquidAttack();
 //					Stun (2);
 //					Restart ();
