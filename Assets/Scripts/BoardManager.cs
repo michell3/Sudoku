@@ -244,12 +244,11 @@ public class BoardManager : MonoBehaviour {
 
 				//REMEMBER TO DELETE THIS
 				if (Input.GetKeyDown (KeyCode.G)) {
-//					cb.LionAttack ();
-					cb.SquidAttack();
+					cb.LionAttack ();
+//					cb.SquidAttack();
 //					Stun (2);
 //					Restart ();
 //					GameOver (true);
-//					LionScare ();
 //					if (isP1)
 //						GainPowerUp ();
 				}
@@ -370,7 +369,7 @@ public class BoardManager : MonoBehaviour {
 	}
 
 	// makes a cell not visible when opponent gets squid ink ability
-	private void SquidInk()
+	public void SquidInk()
 	{
 		randomRow = Random.Range (1, 7);
 		randomCol = Random.Range (1, 7);
@@ -381,7 +380,7 @@ public class BoardManager : MonoBehaviour {
 
 	// a lion runs across a certain row and scares off all the animals from that row
 	//MAKE IT SO THAT THE SPRITES ON THE POSITIONS ARE DESTROYED
-	private void LionScare() {
+	public void LionScare() {
 	
 		if (animalCount() < 5)
 			lionScareCount = animalCount ();
