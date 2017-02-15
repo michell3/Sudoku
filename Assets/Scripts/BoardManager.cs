@@ -238,7 +238,7 @@ public class BoardManager : MonoBehaviour {
 				}
 
 				if (TimerBar.GetComponent<Timer> ().IsPoweredUp () == true) {
-					CastPowerUp ();
+					GainPowerUp ();
 				}
 
 				//REMEMBER TO DELETE THIS
