@@ -25,7 +25,6 @@ public class ObjectBehavior : MonoBehaviour {
 			enemyChar.GetHurt (2f);
 		} else {
 			bm.Stun (5);
-			enemyChar.GetHurt (5f);
 		}
 	}
 }

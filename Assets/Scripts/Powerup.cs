@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Powerup : MonoBehaviour {
 
-	virtual public void Activate(){
+	virtual public void Activate(CharacterBehavior cb){
 
 	}
 }

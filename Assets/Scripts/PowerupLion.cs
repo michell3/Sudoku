@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PowerupLock : Powerup {
+public class PowerupLion : Powerup {
 
 	override public void Activate(CharacterBehavior cb){
-		cb.ThrowLock ();
+		cb.LionAttack ();
 	}
-
 }
