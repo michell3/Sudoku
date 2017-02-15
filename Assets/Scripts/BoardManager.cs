@@ -2,10 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class BoardManager : MonoBehaviour {
 	
 	// For the purposes of sizing
+	public GameObject Char;
+	private CharacterBehavior cb;
 	public GameObject sampleSprite;
 	public GameObject pointer;
 	public GameObject cell;
@@ -115,6 +118,7 @@ public class BoardManager : MonoBehaviour {
 		
 		board = new GameObject[rows, columns];
 		enemyBoard = EnemyBoard;
+		cb = Char.GetComponent<CharacterBehavior> ();
 
 		powerups = new List<GameObject> (); 
 
@@ -152,6 +156,7 @@ public class BoardManager : MonoBehaviour {
 				GameObject instance = Instantiate (cell,
 					new Vector3 (x, y, -1f),
 					Quaternion.identity);
+				instance.transform.parent = transform;
 				board [r, c] = instance;
 			}
 		}
@@ -224,6 +229,7 @@ public class BoardManager : MonoBehaviour {
 					//make sure to wrap around # of rows/columns, then add 1 since
 					//we are 1-indexing
 					choosePointerNum (1);
+
 				} else if (Input.GetKeyDown (controls ["activate"]) && powerups.Count > 0) {
 					GameObject temp = powerups [0];
 					((Powerup)temp.GetComponent<Powerup> ()).Activate (); //call the activation method for powerup
@@ -238,10 +244,15 @@ public class BoardManager : MonoBehaviour {
 
 				//REMEMBER TO DELETE THIS
 				if (Input.GetKeyDown (KeyCode.G)) {
-					if (isP1)
-						GainPowerUp ();
+//					cb.LionAttack ();
+					cb.SquidAttack();
+//					Stun (2);
+//					Restart ();
+//					GameOver (true);
+//					LionScare ();
+//					if (isP1)
+//						GainPowerUp ();
 				}
-			}
 
 				if (Input.GetKeyDown (controls ["lock"])) {
 					//LockGridCell ();
@@ -249,16 +260,15 @@ public class BoardManager : MonoBehaviour {
 				} 
 
 				P1XBoxControls ();
-			} 
 
-			//allows you to move when you are not stunned
-			else {
+			} else {
 				stunTime -= Time.deltaTime;
 				if (stunTime < 0)
 					stunned = false;
 			}
 
 			updatePowerupBar ();
+
 		} else {
 			// GameOver UI controls should be implemented here
 		}
@@ -350,10 +360,11 @@ public class BoardManager : MonoBehaviour {
 		}
 	}
 
-	// stuns a player, either yourself if you choose an incorrct cell or the enemy if you ge tthe stun power-up
+	// stuns a player, either yourself if you choose an incorrect cell or the enemy if you ge tthe stun power-up
 	private void Stun(int seconds) {
-	
-		print ("Stun");
+
+		GridShake gridShake = GetComponent<GridShake> ();
+		gridShake.Play (seconds);
 		stunned = true;
 		stunTime = seconds;
 	}
@@ -377,6 +388,8 @@ public class BoardManager : MonoBehaviour {
 		else
 			lionScareCount = 5;
 
+		numAnimals -= lionScareCount;
+
 		if (animalCount () != 0) {
 		
 			while (lionScareCount > 0) {
@@ -399,9 +412,11 @@ public class BoardManager : MonoBehaviour {
 
 	// makes the animals fall when they are scared by the lion, then destroys them
 	private void animalDescend() {
+
+		List<GameObject> copyList = new List<GameObject> (descendList);
 	
-		foreach (GameObject animal in descendList) {
-		
+		foreach (GameObject animal in copyList) {
+				
 			animal.transform.Translate (0, -.1f, 0);
 			if (animal.transform.position.y < -6) {
 				descendList.Remove (animal);
@@ -529,8 +544,14 @@ public class BoardManager : MonoBehaviour {
 			enemyBM.GameOver (false);
 
 			Instantiate (WinBoard);
+			cb.Winner ();
 		} else {
 			Instantiate (LoseBoard);
+			cb.Loser ();
 		}
+	}
+
+	private void Restart() {
+		SceneManager.LoadScene ("Main");
 	}
 }
