@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
   <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/ChangeScenes.cs">
@@ -29,16 +30,23 @@
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
 =======
+=======
+>>>>>>> cd9263dfe580f264646315b54b2a410a74d17565
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
   <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/BoardManager.cs">
     <Files>
+<<<<<<< HEAD
       <File FileName="Assets/Scripts/BoardManager.cs" Line="309" Column="59" />
       <File FileName="Assets/Scripts/CageRattle.cs" Line="11" Column="15" />
       <File FileName="Assets/Scripts/CharacterBehavior.cs" Line="46" Column="29" />
       <File FileName="Assets/Scripts/ObjectBehavior.cs" Line="27" Column="16" />
       <File FileName="Assets/Scripts/DanceBehavior.cs" Line="23" Column="20" />
 >>>>>>> c9355d44c3f7bc1b2cb8567b9e820f5f18ca9944
+=======
+      <File FileName="Assets/Scripts/BoardManager.cs" Line="468" Column="4" />
+      <File FileName="Assets/Scripts/Cell.cs" Line="1" Column="1" />
+>>>>>>> cd9263dfe580f264646315b54b2a410a74d17565
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
@@ -46,7 +54,10 @@
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> c226348343e6458db0e99e5c2256417ab87fc10d
 >>>>>>> c9355d44c3f7bc1b2cb8567b9e820f5f18ca9944
+=======
+>>>>>>> cd9263dfe580f264646315b54b2a410a74d17565
 </Properties>

@@ -24,6 +24,7 @@ public class CharacterBehavior : MonoBehaviour {
 	// Sounds
 	public AudioClip HurtAudio;
 	private AudioSource hurtAudio;
+	public AudioClip ThrowAudio;
 	private AudioSource throwAudio;
 
 	private Animator anim;
@@ -45,7 +46,7 @@ public class CharacterBehavior : MonoBehaviour {
 		hurtAudio = gameObject.AddComponent<AudioSource>();
 		hurtAudio.clip = HurtAudio;
 		throwAudio = gameObject.AddComponent<AudioSource> ();
-		throwAudio.clip = Resources.Load ("select-1.wav") as AudioClip;
+		throwAudio.clip = ThrowAudio;
 	}
 
 	void Update () {
@@ -98,5 +99,11 @@ public class CharacterBehavior : MonoBehaviour {
 		isHurt = true;
 		hurtTime = seconds;
 		hurtTimer = hurtTime;
+		hurtAudio.Play ();
+	}
+
+	// Sounds
+	public void PlayThrowSound() {
+		throwAudio.Play ();
 	}
 }

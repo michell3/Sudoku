@@ -29,6 +29,16 @@ public class BoardManager : MonoBehaviour {
 	public GameObject LoseBoard;
 	public GameObject WinBoard;
 
+	// Sound
+	public AudioClip SelectAudio;
+	private AudioSource selectAudio;
+	public AudioClip PlaceAudio;
+	private AudioSource placeAudio;
+	public AudioClip CompleteAudio;
+	private AudioSource completeAudio;
+	public AudioClip PowerupAudio;
+	private AudioSource powerupAudio;
+
 	// Grid variables
 	public int columns = 9;
 	public int rows = 9;
@@ -53,6 +63,13 @@ public class BoardManager : MonoBehaviour {
 	// Game state variables
 	public bool isP1 = true;
 	private int numAnimals = 0;
+	private int comebackThreshold = 7;
+
+	public int NumAnimals
+	{
+		get{ return numAnimals; }
+	}
+		
 	private bool isGameOver = false;
 
 	private int randomIndex;
@@ -82,10 +99,10 @@ public class BoardManager : MonoBehaviour {
 	private bool P1justMovedRightTrigger = false;
 	private bool P1justMovedLeftTrigger = false;
 
-//	private bool P2justMovedHorizontal = false;
-//	private bool P2justMovedVertical = false;
-//	private bool P2justMovedRightTrigger = false;
-//	private bool P2justMovedLeftTrigger = false;
+	private bool P2justMovedHorizontal = false;
+	private bool P2justMovedVertical = false;
+	private bool P2justMovedRightTrigger = false;
+	private bool P2justMovedLeftTrigger = false;
 
 	private Dictionary<string, KeyCode> controls;
 
@@ -145,6 +162,16 @@ public class BoardManager : MonoBehaviour {
 		spriteHeight = sampleSprite.GetComponent<SpriteRenderer>().bounds.size.y;
 
 		DisplayBoard ();
+
+		// Sound
+		selectAudio = gameObject.AddComponent<AudioSource> ();
+		selectAudio.clip = SelectAudio;
+		placeAudio = gameObject.AddComponent<AudioSource> ();
+		placeAudio.clip = PlaceAudio;
+		completeAudio = gameObject.AddComponent<AudioSource> ();
+		completeAudio.clip = CompleteAudio;
+		powerupAudio = gameObject.AddComponent<AudioSource> ();
+		powerupAudio.clip = PowerupAudio;
 
 		// Player controls
 		if (isP1)
@@ -206,6 +233,11 @@ public class BoardManager : MonoBehaviour {
 		pointer.transform.position = selectedCell.transform.position;
 		pointerCol = col;
 		pointerRow = row;
+
+		//play sound
+		if (selectAudio) {
+			selectAudio.Play ();
+		}
 	}
 
 	void Update() {
@@ -250,6 +282,9 @@ public class BoardManager : MonoBehaviour {
 		selectSprite (false); // deselect current sprite
 		pointerNum = ((rows + pointerNum + move) % rows); 
 		selectSprite(true); // select new sprite
+
+		// Play sound
+		selectAudio.Play();
 	}
 
 	private void selectSprite(bool select) {
@@ -371,10 +406,13 @@ public class BoardManager : MonoBehaviour {
 	private void animalDescend() {
 		List<GameObject> copyList = new List<GameObject> (descendList);
 		foreach (GameObject animal in copyList) {
-			animal.transform.Translate (0, -.1f, 0);
-			if (animal.transform.position.y < -6) {
-				descendList.Remove (animal);
-				Destroy (animal);
+			if(animal != null)
+			{
+				animal.transform.Translate (0, -.1f, 0);
+				if (animal.transform.position.y < -6) {
+					descendList.Remove (animal);
+					Destroy (animal);
+				}
 			}
 		}
 	}
@@ -396,7 +434,11 @@ public class BoardManager : MonoBehaviour {
 		//cant have more than 4 powerups at a time
 		if (powerups.Count >= 4)
 			return;
-		int powerupIndex = Random.Range(0, powerupSprites.Length);
+		int powerupIndex;
+		if (numAnimals + comebackThreshold < enemyBoard.GetComponent<BoardManager> ().NumAnimals)
+			powerupIndex = powerupSprites.Length - 1; // comeback - best powerup in last index
+		else
+			powerupIndex = Random.Range (0, powerupSprites.Length - 1);
 		GameObject p = Instantiate (powerupSprites [powerupIndex], gameObject.transform);
 		powerups.Add (p);
 	}
@@ -417,6 +459,8 @@ public class BoardManager : MonoBehaviour {
 			TimerBar.GetComponent<Timer>().IncreaseTimer();
 
 			numAnimals++;
+
+			placeAudio.Play ();
 
 			if (numAnimals == 81) {
 				GameOver (true);
@@ -475,6 +519,10 @@ public class BoardManager : MonoBehaviour {
 			c.GetComponent<Cell>().GameOver = isGameOver;
 		}
 
+		// play sound
+		if (toSpin.Count > 0) {
+			completeAudio.Play ();
+		}
 	}
 
 	//returns a set of cells that are complete
@@ -526,17 +574,17 @@ public class BoardManager : MonoBehaviour {
 			}
 
 			//scrolling through sprites to place
-			if (Input.GetAxis ("Left_Trigger") > .8f && !P1justMovedLeftTrigger) {
+			if ((Input.GetAxis ("Left_Trigger") > .8f) && !P1justMovedLeftTrigger) {
 				P1justMovedLeftTrigger = true;
 				choosePointerNum (-1);
-			} else if (Input.GetAxis ("Right_Trigger") > .8f && !P1justMovedRightTrigger) {
+			} else if ((Input.GetAxis ("Right_Trigger") > .8f) && !P1justMovedRightTrigger) {
 				P1justMovedRightTrigger = true;
 				choosePointerNum (1);
 			}	
 			//reset triggers to be able to be placed again
-			if (Input.GetAxis ("Right_Trigger") < .2f)
+			if (Input.GetAxis ("Right_Trigger") == 0)
 				P1justMovedRightTrigger = false;
-			if (Input.GetAxis ("Left_Trigger") < .2f)
+			if (Input.GetAxis ("Left_Trigger") == 0)
 				P1justMovedLeftTrigger = false;
 
 			//test power-ups
@@ -548,10 +596,13 @@ public class BoardManager : MonoBehaviour {
 				Destroy (temp); 
 			} 
 
+			if (Input.GetButtonDown ("B_Button"))
+				SceneManager.LoadScene ("Splash_Screen");
+
 			if (TimerBar.GetComponent<Timer> ().IsPoweredUp () == true) {
+				powerupAudio.Play ();
 				GainPowerUp ();
 			}
-
 
 			//WASD Logic
 
@@ -589,18 +640,76 @@ public class BoardManager : MonoBehaviour {
 
 			if (TimerBar.GetComponent<Timer> ().IsPoweredUp () == true) {
 				GainPowerUp ();
+				powerupAudio.Play ();
 			}
-
-
+			
 			if (Input.GetKeyDown (controls ["cheat"])) {
 				GainPowerUp ();
 			}
+
 		}
 	}
 
 	private void P2XBoxControls() {
 		if (!isP1) {
 
+			//CONTROLLER INPUTS
+			//movement around the grid using Analog Stick
+			if (Input.GetAxis ("PC_J_MainHorizontal") > .5 && !P2justMovedHorizontal) {
+				P2justMovedHorizontal = true;
+				Select (pointerRow, pointerCol + 1);
+			} else if (Input.GetAxis ("PC_J_MainHorizontal") < -.5 && !P2justMovedHorizontal) {
+				P2justMovedHorizontal = true;
+				Select (pointerRow, pointerCol - 1);
+			} else if (Input.GetAxis ("PC_J_MainVertical") > .5 && !P2justMovedVertical) {
+				P2justMovedVertical = true;
+				Select (pointerRow + 1, pointerCol);
+			} else if (Input.GetAxis ("PC_J_MainVertical") < -.5 && !P2justMovedVertical) {
+				P2justMovedVertical = true;
+				Select (pointerRow - 1, pointerCol);
+			}
+
+			//reset analog stick so you can move again
+			if (Input.GetAxis ("PC_J_MainHorizontal") == 0)
+				P2justMovedHorizontal = false;
+			if (Input.GetAxis ("PC_J_MainVertical") == 0)
+				P2justMovedVertical = false;
+
+			//placing the sprites
+			if (Input.GetButtonDown ("PC_A_Button")) {
+				Handheld.Vibrate ();
+				Place ();
+			}
+
+			//scrolling through sprites to place
+			if ((Input.GetAxis ("PC_Left_Trigger") > .8f) && !P2justMovedLeftTrigger) {
+				P2justMovedLeftTrigger = true;
+				choosePointerNum (-1);
+			} else if ((Input.GetAxis ("PC_Right_Trigger") > .8f) && !P2justMovedRightTrigger) {
+				P2justMovedRightTrigger = true;
+				choosePointerNum (1);
+			}	
+			//reset triggers to be able to be placed again
+			if (Input.GetAxis ("PC_Right_Trigger") == 0)
+				P2justMovedRightTrigger = false;
+			if (Input.GetAxis ("PC_Left_Trigger") == 0)
+				P2justMovedLeftTrigger = false;
+
+			//test power-ups
+			if (Input.GetButtonDown ("PC_Y_Button") && powerups.Count > 0 && !stunned)
+			{
+				GameObject temp = powerups [0];
+				((Powerup)temp.GetComponent<Powerup> ()).Activate (cb); //call the activation method for powerup
+				powerups.Remove (temp); //delete and destroy powerup
+				Destroy (temp); 
+			} 
+
+			if (Input.GetButtonDown ("PC_B_Button"))
+				SceneManager.LoadScene ("Splash_Screen");
+
+
+
+			//HARD CODED KEYBOARD INPUTS
 			//moving the selector. 
 			if (Input.GetKeyDown (controls ["down"])) {
 				Select (pointerRow - 1, pointerCol);
@@ -635,6 +744,7 @@ public class BoardManager : MonoBehaviour {
 
 			if (TimerBar.GetComponent<Timer> ().IsPoweredUp () == true) {
 				GainPowerUp ();
+				powerupAudio.Play ();
 			}
 				
 			if (Input.GetKeyDown (controls ["cheat"])) {
@@ -649,6 +759,8 @@ public class BoardManager : MonoBehaviour {
 
 	public void GameOver(bool isWinner) {
 		isGameOver = true;
+		TimerBar.GetComponent<Timer> ().GameOver ();
+
 		if (isWinner) {
 			BoardManager enemyBM = enemyBoard.GetComponent<BoardManager> ();
 			enemyBM.GameOver (false);
