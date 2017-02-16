@@ -29,6 +29,16 @@ public class BoardManager : MonoBehaviour {
 	public GameObject LoseBoard;
 	public GameObject WinBoard;
 
+	// Sound
+	public AudioClip SelectAudio;
+	private AudioSource selectAudio;
+	public AudioClip PlaceAudio;
+	private AudioSource placeAudio;
+	public AudioClip CompleteAudio;
+	private AudioSource completeAudio;
+	public AudioClip PowerupAudio;
+	private AudioSource powerupAudio;
+
 	// Grid variables
 	public int columns = 9;
 	public int rows = 9;
@@ -149,6 +159,16 @@ public class BoardManager : MonoBehaviour {
 
 		DisplayBoard ();
 
+		// Sound
+		selectAudio = gameObject.AddComponent<AudioSource> ();
+		selectAudio.clip = SelectAudio;
+		placeAudio = gameObject.AddComponent<AudioSource> ();
+		placeAudio.clip = PlaceAudio;
+		completeAudio = gameObject.AddComponent<AudioSource> ();
+		completeAudio.clip = CompleteAudio;
+		powerupAudio = gameObject.AddComponent<AudioSource> ();
+		powerupAudio.clip = PowerupAudio;
+
 		// Player controls
 		if (isP1)
 			controls = p1Controls;
@@ -209,6 +229,11 @@ public class BoardManager : MonoBehaviour {
 		pointer.transform.position = selectedCell.transform.position;
 		pointerCol = col;
 		pointerRow = row;
+
+		//play sound
+		if (selectAudio) {
+			selectAudio.Play ();
+		}
 	}
 
 	void Update() {
@@ -247,6 +272,9 @@ public class BoardManager : MonoBehaviour {
 		selectSprite (false); // deselect current sprite
 		pointerNum = ((rows + pointerNum + move) % rows); 
 		selectSprite(true); // select new sprite
+
+		// Play sound
+		selectAudio.Play();
 	}
 
 	private void selectSprite(bool select) {
@@ -422,6 +450,8 @@ public class BoardManager : MonoBehaviour {
 
 			numAnimals++;
 
+			placeAudio.Play ();
+
 			if (numAnimals == 81) {
 				GameOver (true);
 			}
@@ -479,6 +509,10 @@ public class BoardManager : MonoBehaviour {
 			c.GetComponent<Cell>().GameOver = isGameOver;
 		}
 
+		// play sound
+		if (toSpin.Count > 0) {
+			completeAudio.Play ();
+		}
 	}
 
 	//returns a set of cells that are complete
@@ -556,9 +590,9 @@ public class BoardManager : MonoBehaviour {
 				SceneManager.LoadScene ("Splash_Screen");
 
 			if (TimerBar.GetComponent<Timer> ().IsPoweredUp () == true) {
+				powerupAudio.Play ();
 				GainPowerUp ();
 			}
-
 
 			//WASD Logic
 			if (Input.GetKeyDown (controls ["down"])) {
@@ -594,9 +628,9 @@ public class BoardManager : MonoBehaviour {
 
 			if (TimerBar.GetComponent<Timer> ().IsPoweredUp () == true) {
 				GainPowerUp ();
+				powerupAudio.Play ();
 			}
-
-
+			
 			if (Input.GetKeyDown (controls ["cheat"])) {
 				GainPowerUp ();
 			}
@@ -697,6 +731,7 @@ public class BoardManager : MonoBehaviour {
 
 			if (TimerBar.GetComponent<Timer> ().IsPoweredUp () == true) {
 				GainPowerUp ();
+				powerupAudio.Play ();
 			}
 				
 			if (Input.GetKeyDown (controls ["cheat"])) {
