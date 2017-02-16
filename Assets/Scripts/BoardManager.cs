@@ -746,6 +746,8 @@ public class BoardManager : MonoBehaviour {
 
 	public void GameOver(bool isWinner) {
 		isGameOver = true;
+		TimerBar.GetComponent<Timer> ().GameOver ();
+
 		if (isWinner) {
 			BoardManager enemyBM = enemyBoard.GetComponent<BoardManager> ();
 			enemyBM.GameOver (false);
