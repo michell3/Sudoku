@@ -35,7 +35,9 @@ public class Timer : MonoBehaviour {
 	private bool powerup = false;
 
 	private Color[] rainbow;
-	private int colorIndex; 
+	private int colorIndex;
+
+	private bool isGameOver = false;
 
 	// Called by the board manager when a correct number is placed
 	public void IncreaseTimer() {
@@ -45,6 +47,10 @@ public class Timer : MonoBehaviour {
 		}
 		fillAmount = newAmount;
 		UpdateTimer ();
+	}
+
+	public void GameOver() {
+		isGameOver = true;
 	}
 
 	// Called by the board manager to see if a powerup occurred
@@ -91,51 +97,54 @@ public class Timer : MonoBehaviour {
 
 	void Update () {
 
-		if (fillAmount >= initialValue) {
+		if (!isGameOver) {
+			
+			if (fillAmount >= initialValue) {
 
-			if (fillAmount >= 0.99f) {
-				childSprite.sprite = WhiteTimer;
-				isGreen = true;
+				if (fillAmount >= 0.99f) {
+					childSprite.sprite = WhiteTimer;
+					isGreen = true;
 
-				// Play sound
-				if (!isPlayingAudio) {
-					rainbowAudio.Play ();
-					isPlayingAudio = true;
-				}
+					// Play sound
+					if (!isPlayingAudio) {
+						rainbowAudio.Play ();
+						isPlayingAudio = true;
+					}
 
-				//change the color of the bar each time
-				childSprite.color = rainbow [colorIndex/8];
-				colorIndex = (colorIndex + 1) % (8*rainbow.Length);
+					//change the color of the bar each time
+					childSprite.color = rainbow [colorIndex / 8];
+					colorIndex = (colorIndex + 1) % (8 * rainbow.Length);
 
-				if (greenTime <= 0.0f) {
-					powerup = true;
-					isGreen = false;
-					greenTime = GreenTime;
-					childSprite.color = new Color (1.0f, 1.0f, 1.0f, 1.0f); //reset to white
-					childSprite.sprite = RedTimer;
-					fillAmount = initialValue;
-					isPlayingAudio = false;
-					//powerup = false;
-					return;
-				}
+					if (greenTime <= 0.0f) {
+						powerup = true;
+						isGreen = false;
+						greenTime = GreenTime;
+						childSprite.color = new Color (1.0f, 1.0f, 1.0f, 1.0f); //reset to white
+						childSprite.sprite = RedTimer;
+						fillAmount = initialValue;
+						isPlayingAudio = false;
+						//powerup = false;
+						return;
+					}
 
-			} else {
-				fillAmount += 1.0f / timerSpeed * Time.deltaTime;
-				UpdateTimer ();
-
-				if (fillAmount <= 0.5f) {
-					childSprite.sprite = RedTimer;
-				} else if (0.5f < fillAmount && fillAmount <= 0.9f) {
-					childSprite.sprite = YellowTimer;
-					return;
 				} else {
-					childSprite.sprite = GreenTimer;
+					fillAmount += 1.0f / timerSpeed * Time.deltaTime;
+					UpdateTimer ();
+
+					if (fillAmount <= 0.5f) {
+						childSprite.sprite = RedTimer;
+					} else if (0.5f < fillAmount && fillAmount <= 0.9f) {
+						childSprite.sprite = YellowTimer;
+						return;
+					} else {
+						childSprite.sprite = GreenTimer;
+					}
 				}
 			}
-		}
 
-		if (isGreen) {
-			greenTime -= Time.deltaTime;
+			if (isGreen) {
+				greenTime -= Time.deltaTime;
+			}
 		}
 	}
 }
