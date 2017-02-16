@@ -7,16 +7,22 @@ public class ChangeScenes : MonoBehaviour {
 	public Button yourButton;
 	public Sprite yourImage;
 	public string nextScene;
+	//public SpriteState sprState = new SpriteState();
 
 	void Start () {
-		//yourImage = Resources.Load<Sprite>("BTNS");
-		Button btn = yourButton.GetComponent<Button>();
-		btn.onClick.AddListener(TaskOnClick);
+		Button btn = yourButton.GetComponent<Button> ();
+		btn.onClick.AddListener (update);
+
+
+
+
+
 
 	}
 
-	void TaskOnClick(){
-		yourButton.image.sprite = yourImage;
+	void update(){
+		
+		//yourButton.image.sprite = yourImage;
 		SceneManager.LoadScene (nextScene);
 		//Debug.Log ("You have clicked the button!");
 	}
