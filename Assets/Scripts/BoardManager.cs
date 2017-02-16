@@ -530,17 +530,17 @@ public class BoardManager : MonoBehaviour {
 			}
 
 			//scrolling through sprites to place
-			if ((Input.GetAxis ("Left_Trigger") > .8f || Input.GetAxis ("PC_Left_Trigger") > .8f) && !P1justMovedLeftTrigger) {
+			if ((Input.GetAxis ("Left_Trigger") > .8f) && !P1justMovedLeftTrigger) {
 				P1justMovedLeftTrigger = true;
 				choosePointerNum (-1);
-			} else if ((Input.GetAxis ("Right_Trigger") > .8f || Input.GetAxis ("PC_Right_Trigger") > .8f) && !P1justMovedRightTrigger) {
+			} else if ((Input.GetAxis ("Right_Trigger") > .8f) && !P1justMovedRightTrigger) {
 				P1justMovedRightTrigger = true;
 				choosePointerNum (1);
 			}	
 			//reset triggers to be able to be placed again
-			if (Input.GetAxis ("Right_Trigger") < .2f)
+			if (Input.GetAxis ("Right_Trigger") == 0)
 				P1justMovedRightTrigger = false;
-			if (Input.GetAxis ("Left_Trigger") < .2f)
+			if (Input.GetAxis ("Left_Trigger") == 0)
 				P1justMovedLeftTrigger = false;
 
 			//test power-ups
@@ -635,17 +635,17 @@ public class BoardManager : MonoBehaviour {
 			}
 
 			//scrolling through sprites to place
-			if ((Input.GetAxis ("PC_Left_Trigger") > .8f || Input.GetAxis ("PC_Left_Trigger") > .8f) && !P2justMovedLeftTrigger) {
+			if ((Input.GetAxis ("PC_Left_Trigger") > .8f) && !P2justMovedLeftTrigger) {
 				P2justMovedLeftTrigger = true;
 				choosePointerNum (-1);
-			} else if ((Input.GetAxis ("PC_Right_Trigger") > .8f || Input.GetAxis ("PC_Right_Trigger") > .8f) && !P2justMovedRightTrigger) {
+			} else if ((Input.GetAxis ("PC_Right_Trigger") > .8f) && !P2justMovedRightTrigger) {
 				P2justMovedRightTrigger = true;
 				choosePointerNum (1);
 			}	
 			//reset triggers to be able to be placed again
-			if (Input.GetAxis ("PC_Right_Trigger") < .2f)
+			if (Input.GetAxis ("PC_Right_Trigger") == 0)
 				P2justMovedRightTrigger = false;
-			if (Input.GetAxis ("PC_Left_Trigger") < .2f)
+			if (Input.GetAxis ("PC_Left_Trigger") == 0)
 				P2justMovedLeftTrigger = false;
 
 			//test power-ups
