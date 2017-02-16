@@ -29,16 +29,6 @@ public class BoardManager : MonoBehaviour {
 	public GameObject LoseBoard;
 	public GameObject WinBoard;
 
-	// Sound
-	public AudioClip SelectAudio;
-	private AudioSource selectAudio;
-	public AudioClip PlaceAudio;
-	private AudioSource placeAudio;
-	public AudioClip CompleteAudio;
-	private AudioSource completeAudio;
-	public AudioClip PowerupAudio;
-	private AudioSource powerupAudio;
-
 	// Grid variables
 	public int columns = 9;
 	public int rows = 9;
@@ -82,8 +72,9 @@ public class BoardManager : MonoBehaviour {
 	private int pointerNum;
 	public GameObject numberBar;
 	public GameObject powerupBar;
-	public GameObject[] powerupSprites; 
-	private List<GameObject> powerups;
+	public GameObject[] weakPowerups; 
+	public GameObject[] strongPowerups;
+	private List<GameObject> myPowerups;
 
 	private int randomRow;
 	private int randomCol;
@@ -145,7 +136,7 @@ public class BoardManager : MonoBehaviour {
 		enemyBoard = EnemyBoard;
 		cb = Char.GetComponent<CharacterBehavior> ();
 
-		powerups = new List<GameObject> (); 
+		myPowerups = new List<GameObject> (); 
 
 		// Variables for placing animals on grid
 		spriteScale = sampleSprite.transform.localScale.x;
@@ -162,16 +153,6 @@ public class BoardManager : MonoBehaviour {
 		spriteHeight = sampleSprite.GetComponent<SpriteRenderer>().bounds.size.y;
 
 		DisplayBoard ();
-
-		// Sound
-		selectAudio = gameObject.AddComponent<AudioSource> ();
-		selectAudio.clip = SelectAudio;
-		placeAudio = gameObject.AddComponent<AudioSource> ();
-		placeAudio.clip = PlaceAudio;
-		completeAudio = gameObject.AddComponent<AudioSource> ();
-		completeAudio.clip = CompleteAudio;
-		powerupAudio = gameObject.AddComponent<AudioSource> ();
-		powerupAudio.clip = PowerupAudio;
 
 		// Player controls
 		if (isP1)
@@ -233,11 +214,6 @@ public class BoardManager : MonoBehaviour {
 		pointer.transform.position = selectedCell.transform.position;
 		pointerCol = col;
 		pointerRow = row;
-
-		//play sound
-		if (selectAudio) {
-			selectAudio.Play ();
-		}
 	}
 
 	void Update() {
@@ -270,10 +246,10 @@ public class BoardManager : MonoBehaviour {
 	private void updatePowerupBar() {
 	
 		GameObject temp;
-		for (int i = 0; i < powerups.Count; i++) {
+		for (int i = 0; i < myPowerups.Count; i++) {
 			temp = powerupBar.transform.GetChild (i).gameObject;
-			powerups [i].transform.parent = temp.transform; 
-			powerups [i].transform.localPosition = Vector3.zero;
+			myPowerups [i].transform.parent = temp.transform; 
+			myPowerups [i].transform.localPosition = Vector3.zero;
 		}
 	}
 		
@@ -282,9 +258,6 @@ public class BoardManager : MonoBehaviour {
 		selectSprite (false); // deselect current sprite
 		pointerNum = ((rows + pointerNum + move) % rows); 
 		selectSprite(true); // select new sprite
-
-		// Play sound
-		selectAudio.Play();
 	}
 
 	private void selectSprite(bool select) {
@@ -432,15 +405,18 @@ public class BoardManager : MonoBehaviour {
 
 	public void GainPowerUp() {
 		//cant have more than 4 powerups at a time
-		if (powerups.Count >= 4)
+		if (myPowerups.Count >= 4)
 			return;
 		int powerupIndex;
-		if (numAnimals + comebackThreshold < enemyBoard.GetComponent<BoardManager> ().NumAnimals)
-			powerupIndex = powerupSprites.Length - 1; // comeback - best powerup in last index
-		else
-			powerupIndex = Random.Range (0, powerupSprites.Length - 1);
-		GameObject p = Instantiate (powerupSprites [powerupIndex], gameObject.transform);
-		powerups.Add (p);
+		GameObject p;
+		if (numAnimals + comebackThreshold < enemyBoard.GetComponent<BoardManager> ().NumAnimals) {
+			powerupIndex = Random.Range (0, strongPowerups.Length); // comeback - best powerup in last index
+			p = Instantiate (strongPowerups [powerupIndex], gameObject.transform);
+		} else {
+			powerupIndex = Random.Range (0, weakPowerups.Length);
+			p = Instantiate (weakPowerups [powerupIndex], gameObject.transform);
+		}
+		myPowerups.Add (p);
 	}
 
 	private bool Check() {
@@ -459,8 +435,6 @@ public class BoardManager : MonoBehaviour {
 			TimerBar.GetComponent<Timer>().IncreaseTimer();
 
 			numAnimals++;
-
-			placeAudio.Play ();
 
 			if (numAnimals == 81) {
 				GameOver (true);
@@ -519,10 +493,6 @@ public class BoardManager : MonoBehaviour {
 			c.GetComponent<Cell>().GameOver = isGameOver;
 		}
 
-		// play sound
-		if (toSpin.Count > 0) {
-			completeAudio.Play ();
-		}
 	}
 
 	//returns a set of cells that are complete
@@ -588,21 +558,17 @@ public class BoardManager : MonoBehaviour {
 				P1justMovedLeftTrigger = false;
 
 			//test power-ups
-			if (Input.GetButtonDown ("Y_Button") && powerups.Count > 0 && !stunned)
+			if (Input.GetButtonDown ("X_Button") && myPowerups.Count > 0 && !stunned)
 			{
-				GameObject temp = powerups [0];
+				GameObject temp = myPowerups [0];
 				((Powerup)temp.GetComponent<Powerup> ()).Activate (cb); //call the activation method for powerup
-				powerups.Remove (temp); //delete and destroy powerup
+				myPowerups.Remove (temp); //delete and destroy powerup
 				Destroy (temp); 
 			} 
 
 			if (Input.GetButtonDown ("B_Button"))
 				SceneManager.LoadScene ("Splash_Screen");
 
-			if (TimerBar.GetComponent<Timer> ().IsPoweredUp () == true) {
-				powerupAudio.Play ();
-				GainPowerUp ();
-			}
 
 			//WASD Logic
 
@@ -630,19 +596,19 @@ public class BoardManager : MonoBehaviour {
 				choosePointerNum (1);
 
 			} else if (Input.GetKeyDown (controls ["activate"]) && 
-				powerups.Count > 0 &&
+				myPowerups.Count > 0 &&
 				!stunned) {
-				GameObject temp = powerups [0];
+				GameObject temp = myPowerups [0];
 				((Powerup)temp.GetComponent<Powerup> ()).Activate (cb); //call the activation method for powerup
-				powerups.Remove (temp); //delete and destroy powerup
+				myPowerups.Remove (temp); //delete and destroy powerup
 				Destroy (temp); 
 			}
 
 			if (TimerBar.GetComponent<Timer> ().IsPoweredUp () == true) {
 				GainPowerUp ();
-				powerupAudio.Play ();
 			}
-			
+
+
 			if (Input.GetKeyDown (controls ["cheat"])) {
 				GainPowerUp ();
 			}
@@ -696,11 +662,11 @@ public class BoardManager : MonoBehaviour {
 				P2justMovedLeftTrigger = false;
 
 			//test power-ups
-			if (Input.GetButtonDown ("PC_Y_Button") && powerups.Count > 0 && !stunned)
+			if (Input.GetButtonDown ("PC_X_Button") && myPowerups.Count > 0 && !stunned)
 			{
-				GameObject temp = powerups [0];
+				GameObject temp = myPowerups [0];
 				((Powerup)temp.GetComponent<Powerup> ()).Activate (cb); //call the activation method for powerup
-				powerups.Remove (temp); //delete and destroy powerup
+				myPowerups.Remove (temp); //delete and destroy powerup
 				Destroy (temp); 
 			} 
 
@@ -734,17 +700,16 @@ public class BoardManager : MonoBehaviour {
 				choosePointerNum (1);
 
 			} else if (Input.GetKeyDown (controls ["activate"]) && 
-				powerups.Count > 0 &&
+				myPowerups.Count > 0 &&
 				!stunned) {
-				GameObject temp = powerups [0];
+				GameObject temp = myPowerups [0];
 				((Powerup)temp.GetComponent<Powerup> ()).Activate (cb); //call the activation method for powerup
-				powerups.Remove (temp); //delete and destroy powerup
+				myPowerups.Remove (temp); //delete and destroy powerup
 				Destroy (temp); 
 			}
 
 			if (TimerBar.GetComponent<Timer> ().IsPoweredUp () == true) {
 				GainPowerUp ();
-				powerupAudio.Play ();
 			}
 				
 			if (Input.GetKeyDown (controls ["cheat"])) {
