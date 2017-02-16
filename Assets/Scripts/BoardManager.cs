@@ -412,6 +412,8 @@ public class BoardManager : MonoBehaviour {
 			if (numAnimals == 81) {
 				GameOver (true);
 			}
+
+			CheckComplete (pointerRow, pointerCol);
 		}
 		//if you try to place something in a locked grid 
 		else if (selectedCell.GetComponent<Cell> ().Locked)  {
@@ -422,6 +424,63 @@ public class BoardManager : MonoBehaviour {
 		else {
 			Stun (2);
 		}
+	}
+
+	private void CheckComplete(int row, int col){
+		GameObject[] toCheck = new GameObject[9];
+		HashSet<Cell> toSpin = new HashSet<Cell> (); 
+
+		//check row
+
+		for (int i = 0; i < columns; i++) {
+			toCheck[i] = board[row, i];
+		}
+		toSpin.UnionWith (CheckCompleteHelper (toCheck));
+
+		//Check column
+		for (int i = 0; i < rows; i++) {
+			toCheck[i] = board[i, col];
+		}
+		toSpin.UnionWith (CheckCompleteHelper (toCheck));
+
+		//check box
+		int boxStartRow = (row / 3) * 3;
+		int boxStartCol = (col / 3) * 3;
+
+		int index = 0; 
+
+		for (int i = boxStartRow; i < boxStartRow + 3; i++){
+			for (int j = boxStartCol; j < boxStartCol + 3; j++) {
+				toCheck [index] = board [i, j];
+				index++; 
+			}
+		}
+
+		toSpin.UnionWith (CheckCompleteHelper (toCheck));
+
+		Cell[] toSpinArray = new Cell[toSpin.Count];
+		toSpin.CopyTo (toSpinArray);
+		foreach (Cell c in toSpinArray){
+			c.GetComponent<Cell>().Spinning = true;
+		}
+
+	}
+
+	//returns a set of cells that are complete
+	private HashSet<Cell> CheckCompleteHelper(GameObject[] toCheck){
+		HashSet<Cell> tempCells = new HashSet<Cell> ();
+		Cell curCell; 
+
+		for (int i = 0; i < toCheck.Length; i++){
+			curCell = toCheck [i].GetComponent<Cell>();
+			if (curCell.Val < 0) {
+				//not complete, return empty set
+				tempCells.Clear ();
+				break;
+			}
+			tempCells.Add (curCell);
+		}
+		return tempCells;
 	}
 
 
