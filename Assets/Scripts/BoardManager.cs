@@ -77,31 +77,35 @@ public class BoardManager : MonoBehaviour {
 
 	private int lionScareCount;
 
-	private bool justMovedHorizontal = false;
-	private bool justMovedVertical = false;
+	private bool P1justMovedHorizontal = false;
+	private bool P1justMovedVertical = false;
+	private bool P1justMovedRightTrigger = false;
+	private bool P1justMovedLeftTrigger = false;
 
-	private bool justMovedRightTrigger = false;
-	private bool justMovedLeftTrigger = false;
+	private bool P2justMovedHorizontal = false;
+	private bool P2justMovedVertical = false;
+	private bool P2justMovedRightTrigger = false;
+	private bool P2justMovedLeftTrigger = false;
 
 	private Dictionary<string, KeyCode> controls;
 
 	private int[,] answer, show;
 
 	//Define different controls for different players
-	Dictionary<string, KeyCode> p1Controls = 
+	Dictionary<string, KeyCode> p2Controls = 
 		new Dictionary<string, KeyCode> () {
 		{"up", KeyCode.UpArrow},
 		{"down", KeyCode.DownArrow},
 		{"left", KeyCode.LeftArrow},
 		{"right", KeyCode.RightArrow},
 		{"place", KeyCode.Space},
-		{"chooseUp", KeyCode.N},
-		{"chooseDown", KeyCode.B},
+		{"chooseUp", KeyCode.R},
+		{"chooseDown", KeyCode.E},
 		{"lock", KeyCode.LeftShift},
-		{"activate", KeyCode.M}
+		{"activate", KeyCode.P}
 	};
 
-	Dictionary<string, KeyCode> p2Controls = 
+	Dictionary<string, KeyCode> p1Controls = 
 		new Dictionary<string, KeyCode> () {
 		{"up", KeyCode.W},
 		{"left", KeyCode.A},
@@ -111,7 +115,7 @@ public class BoardManager : MonoBehaviour {
 		{"chooseUp", KeyCode.Y},
 		{"chooseDown", KeyCode.T},
 		{"lock", KeyCode.RightShift},
-		{"activate", KeyCode.U}
+		{"activate", KeyCode.M}
 	};
 
 	void Awake () {
@@ -207,69 +211,15 @@ public class BoardManager : MonoBehaviour {
 		if (!isGameOver) {
 
 			if (!stunned) {
-				//moving the selector. 
-				if (Input.GetKeyDown (controls ["down"])) {
-					Select (pointerRow - 1, pointerCol);
-				} else if (Input.GetKeyDown (controls ["up"])) {
-					Select (pointerRow + 1, pointerCol);
-				} else if (Input.GetKeyDown (controls ["left"])) {
-					Select (pointerRow, pointerCol - 1);
-				} else if (Input.GetKeyDown (controls ["right"])) {
-					Select (pointerRow, pointerCol + 1);
-				}
-
-				if (Input.GetKeyDown (controls ["place"])) {
-					Place ();
-				} else if (Input.GetKeyDown (controls ["chooseDown"])) {
-					//make sure to wrap around # of rows/columns, then add 1 since
-					//we are 1-indexing
-					choosePointerNum (-1);
-
-				} else if (Input.GetKeyDown (controls ["chooseUp"])) {
-					//make sure to wrap around # of rows/columns, then add 1 since
-					//we are 1-indexing
-					choosePointerNum (1);
-
-				} else if (Input.GetKeyDown (controls ["activate"]) && 
-						   powerups.Count > 0 &&
-						   !stunned) {
-					GameObject temp = powerups [0];
-					((Powerup)temp.GetComponent<Powerup> ()).Activate (cb); //call the activation method for powerup
-					powerups.Remove (temp); //delete and destroy powerup
-					Destroy (temp); 
-				}
-
-				if (TimerBar.GetComponent<Timer> ().IsPoweredUp () == true) {
-					GainPowerUp ();
-				}
-
-				//REMEMBER TO DELETE THIS
-				if (Input.GetKeyDown (KeyCode.G) && isP1) {
-					//cb.ThrowDart ();
-					cb.ThrowLock ();
-//					cb.LionAttack ();
-//					cb.SquidAttack();
-//					Stun (2);
-//					Restart ();
-//					GameOver (true);
-//					if (isP1)
-//						GainPowerUp ();
-				}
-
-				if (Input.GetKeyDown (controls ["lock"])) {
-					GainPowerUp ();
-				} 
-
 				P1XBoxControls ();
+				P2XBoxControls ();
 
 			} else {
 				stunTime -= Time.deltaTime;
 				if (stunTime < 0)
 					stunned = false;
 			}
-
 			updatePowerupBar ();
-
 		} else {
 			// GameOver UI controls should be implemented here
 		}
@@ -340,7 +290,6 @@ public class BoardManager : MonoBehaviour {
 
 	// locks the grid cell that is selected
 	public void LockGridCell() {
-	
 		if (openGrid () != 0) {
 			randomRow = Random.Range (0, 9);
 			randomCol = Random.Range (0, 9);
@@ -411,11 +360,8 @@ public class BoardManager : MonoBehaviour {
 
 	// makes the animals fall when they are scared by the lion, then destroys them
 	private void animalDescend() {
-
 		List<GameObject> copyList = new List<GameObject> (descendList);
-	
 		foreach (GameObject animal in copyList) {
-				
 			animal.transform.Translate (0, -.1f, 0);
 			if (animal.transform.position.y < -6) {
 				descendList.Remove (animal);
@@ -426,7 +372,6 @@ public class BoardManager : MonoBehaviour {
 
 	// when your power-up meter is full, select a random power
 	public void CastPowerUp() {
-	
 		power = Random.Range (1, 5);
 		if (power == 1)
 			cb.ThrowDart ();
@@ -467,6 +412,8 @@ public class BoardManager : MonoBehaviour {
 			if (numAnimals == 81) {
 				GameOver (true);
 			}
+
+			CheckComplete (pointerRow, pointerCol);
 		}
 		//if you try to place something in a locked grid 
 		else if (selectedCell.GetComponent<Cell> ().Locked)  {
@@ -479,56 +426,158 @@ public class BoardManager : MonoBehaviour {
 		}
 	}
 
+	private void CheckComplete(int row, int col){
+		GameObject[] toCheck = new GameObject[9];
+		HashSet<Cell> toSpin = new HashSet<Cell> (); 
+
+		//check row
+
+		for (int i = 0; i < columns; i++) {
+			toCheck[i] = board[row, i];
+		}
+		toSpin.UnionWith (CheckCompleteHelper (toCheck));
+
+		//Check column
+		for (int i = 0; i < rows; i++) {
+			toCheck[i] = board[i, col];
+		}
+		toSpin.UnionWith (CheckCompleteHelper (toCheck));
+
+		//check box
+		int boxStartRow = (row / 3) * 3;
+		int boxStartCol = (col / 3) * 3;
+
+		int index = 0; 
+
+		for (int i = boxStartRow; i < boxStartRow + 3; i++){
+			for (int j = boxStartCol; j < boxStartCol + 3; j++) {
+				toCheck [index] = board [i, j];
+				index++; 
+			}
+		}
+
+		toSpin.UnionWith (CheckCompleteHelper (toCheck));
+
+		Cell[] toSpinArray = new Cell[toSpin.Count];
+		toSpin.CopyTo (toSpinArray);
+		foreach (Cell c in toSpinArray){
+			c.GetComponent<Cell>().Spinning = true;
+		}
+
+	}
+
+	//returns a set of cells that are complete
+	private HashSet<Cell> CheckCompleteHelper(GameObject[] toCheck){
+		HashSet<Cell> tempCells = new HashSet<Cell> ();
+		Cell curCell; 
+
+		for (int i = 0; i < toCheck.Length; i++){
+			curCell = toCheck [i].GetComponent<Cell>();
+			if (curCell.Val < 0) {
+				//not complete, return empty set
+				tempCells.Clear ();
+				break;
+			}
+			tempCells.Add (curCell);
+		}
+		return tempCells;
+	}
+
 
 	//XBOX CONTROLLER CONTROLS
 	private void P1XBoxControls() {
-
 		if (isP1) {
 			//movement around the grid using Analog Stick
-			if (Input.GetAxis ("J_MainHorizontal") > .5 && !justMovedHorizontal) {
-				justMovedHorizontal = true;
+			if (Input.GetAxis ("J_MainHorizontal") > .5 && !P1justMovedHorizontal) {
+				P1justMovedHorizontal = true;
 				Select (pointerRow, pointerCol + 1);
-			} else if (Input.GetAxis ("J_MainHorizontal") < -.5 && !justMovedHorizontal) {
-				justMovedHorizontal = true;
+			} else if (Input.GetAxis ("J_MainHorizontal") < -.5 && !P1justMovedHorizontal) {
+				P1justMovedHorizontal = true;
 				Select (pointerRow, pointerCol - 1);
-			} else if (Input.GetAxis ("J_MainVertical") > .5 && !justMovedVertical) {
-				justMovedVertical = true;
+			} else if (Input.GetAxis ("J_MainVertical") > .5 && !P1justMovedVertical) {
+				P1justMovedVertical = true;
 				Select (pointerRow + 1, pointerCol);
-			} else if (Input.GetAxis ("J_MainVertical") < -.5 && !justMovedVertical) {
-				justMovedVertical = true;
+			} else if (Input.GetAxis ("J_MainVertical") < -.5 && !P1justMovedVertical) {
+				P1justMovedVertical = true;
 				Select (pointerRow - 1, pointerCol);
 			}
 
 			//reset analog stick so you can move again
 			if (Input.GetAxis ("J_MainHorizontal") == 0)
-				justMovedHorizontal = false;
+				P1justMovedHorizontal = false;
 			if (Input.GetAxis ("J_MainVertical") == 0)
-				justMovedVertical = false;
+				P1justMovedVertical = false;
 
 			//placing the sprites
 			if (Input.GetButtonDown ("A_Button"))
 				Place ();
 
 			//scrolling through sprites to place
-			if (Input.GetAxis ("Left_Trigger") > .8f && !justMovedLeftTrigger) {
-				justMovedLeftTrigger = true;
+			if (Input.GetAxis ("Left_Trigger") > .8f && !P1justMovedLeftTrigger) {
+				P1justMovedLeftTrigger = true;
 				choosePointerNum (-1);
-			} else if (Input.GetAxis ("Right_Trigger") > .8f && !justMovedRightTrigger) {
-				justMovedRightTrigger = true;
+			} else if (Input.GetAxis ("Right_Trigger") > .8f && !P1justMovedRightTrigger) {
+				P1justMovedRightTrigger = true;
 				choosePointerNum (1);
 			}	
 			//reset triggers to be able to be placed again
 			if (Input.GetAxis ("Right_Trigger") < .2f)
-				justMovedRightTrigger = false;
+				P1justMovedRightTrigger = false;
 			if (Input.GetAxis ("Left_Trigger") < .2f)
-				justMovedLeftTrigger = false;
-		
-		} else {
+				P1justMovedLeftTrigger = false;
+
 			//test power-ups
-			if (Input.GetButtonDown ("Y_Button"))
-				SquidInk ();
-			if (Input.GetButtonDown ("B_Button"))
-				LionScare ();
+			if (Input.GetButtonDown ("Y_Button") && powerups.Count > 0 && !stunned)
+			{
+				GameObject temp = powerups [0];
+				((Powerup)temp.GetComponent<Powerup> ()).Activate (cb); //call the activation method for powerup
+				powerups.Remove (temp); //delete and destroy powerup
+				Destroy (temp); 
+			} 
+		}
+	}
+
+	private void P2XBoxControls() {
+		if (!isP1) {
+			//moving the selector. 
+			if (Input.GetKeyDown (controls ["down"])) {
+				Select (pointerRow - 1, pointerCol);
+			} else if (Input.GetKeyDown (controls ["up"])) {
+				Select (pointerRow + 1, pointerCol);
+			} else if (Input.GetKeyDown (controls ["left"])) {
+				Select (pointerRow, pointerCol - 1);
+			} else if (Input.GetKeyDown (controls ["right"])) {
+				Select (pointerRow, pointerCol + 1);
+			}
+
+			if (Input.GetKeyDown (controls ["place"])) {
+				Place ();
+			} else if (Input.GetKeyDown (controls ["chooseDown"])) {
+				//make sure to wrap around # of rows/columns, then add 1 since
+				//we are 1-indexing
+				choosePointerNum (-1);
+
+			} else if (Input.GetKeyDown (controls ["chooseUp"])) {
+				//make sure to wrap around # of rows/columns, then add 1 since
+				//we are 1-indexing
+				choosePointerNum (1);
+
+			} else if (Input.GetKeyDown (controls ["activate"]) && 
+				powerups.Count > 0 &&
+				!stunned) {
+				GameObject temp = powerups [0];
+				((Powerup)temp.GetComponent<Powerup> ()).Activate (cb); //call the activation method for powerup
+				powerups.Remove (temp); //delete and destroy powerup
+				Destroy (temp); 
+			}
+
+			if (TimerBar.GetComponent<Timer> ().IsPoweredUp () == true) {
+				GainPowerUp ();
+			}
+
+			if (Input.GetKeyDown (controls ["lock"])) {
+				GainPowerUp ();
+			}
 		}
 	}
 
@@ -537,9 +586,7 @@ public class BoardManager : MonoBehaviour {
 	}
 
 	public void GameOver(bool isWinner) {
-		
 		isGameOver = true;
-
 		if (isWinner) {
 			BoardManager enemyBM = enemyBoard.GetComponent<BoardManager> ();
 			enemyBM.GameOver (false);
