@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class PowerupLock : Powerup {
 
-	override public void Activate(){
-		Debug.Log ("Using lock powerup");
+	override public void Activate(CharacterBehavior cb){
+		cb.ThrowLock ();
 	}
 
 }

@@ -230,21 +230,23 @@ public class BoardManager : MonoBehaviour {
 					//we are 1-indexing
 					choosePointerNum (1);
 
-				} else if (Input.GetKeyDown (controls ["activate"]) && powerups.Count > 0) {
+				} else if (Input.GetKeyDown (controls ["activate"]) && 
+						   powerups.Count > 0 &&
+						   !stunned) {
 					GameObject temp = powerups [0];
-					((Powerup)temp.GetComponent<Powerup> ()).Activate (); //call the activation method for powerup
+					((Powerup)temp.GetComponent<Powerup> ()).Activate (cb); //call the activation method for powerup
 					powerups.Remove (temp); //delete and destroy powerup
 					Destroy (temp); 
 				}
 
 				if (TimerBar.GetComponent<Timer> ().IsPoweredUp () == true) {
-					CastPowerUp ();
+					GainPowerUp ();
 				}
 
 				//REMEMBER TO DELETE THIS
-				if (Input.GetKeyDown (KeyCode.G)) {
-					cb.ThrowDart ();
-//					cb.ThrowLock ();
+				if (Input.GetKeyDown (KeyCode.G) && isP1) {
+					//cb.ThrowDart ();
+					cb.ThrowLock ();
 //					cb.LionAttack ();
 //					cb.SquidAttack();
 //					Stun (2);
@@ -288,7 +290,6 @@ public class BoardManager : MonoBehaviour {
 		selectSprite (false); // deselect current sprite
 		pointerNum = ((rows + pointerNum + move) % rows); 
 		selectSprite(true); // select new sprite
-	
 	}
 
 	private void selectSprite(bool select) {
@@ -440,7 +441,8 @@ public class BoardManager : MonoBehaviour {
 		//cant have more than 4 powerups at a time
 		if (powerups.Count >= 4)
 			return;
-		GameObject p = Instantiate (powerupSprites [0], gameObject.transform);
+		int powerupIndex = Random.Range(0, powerupSprites.Length);
+		GameObject p = Instantiate (powerupSprites [powerupIndex], gameObject.transform);
 		powerups.Add (p);
 	}
 
@@ -464,6 +466,8 @@ public class BoardManager : MonoBehaviour {
 			if (numAnimals == 81) {
 				GameOver (true);
 			}
+
+			CheckComplete (pointerRow, pointerCol);
 		}
 		//if you try to place something in a locked grid 
 		else if (selectedCell.GetComponent<Cell> ().Locked)  {
@@ -474,6 +478,63 @@ public class BoardManager : MonoBehaviour {
 		else {
 			Stun (2);
 		}
+	}
+
+	private void CheckComplete(int row, int col){
+		GameObject[] toCheck = new GameObject[9];
+		HashSet<Cell> toSpin = new HashSet<Cell> (); 
+
+		//check row
+
+		for (int i = 0; i < columns; i++) {
+			toCheck[i] = board[row, i];
+		}
+		toSpin.UnionWith (CheckCompleteHelper (toCheck));
+
+		//Check column
+		for (int i = 0; i < rows; i++) {
+			toCheck[i] = board[i, col];
+		}
+		toSpin.UnionWith (CheckCompleteHelper (toCheck));
+
+		//check box
+		int boxStartRow = (row / 3) * 3;
+		int boxStartCol = (col / 3) * 3;
+
+		int index = 0; 
+
+		for (int i = boxStartRow; i < boxStartRow + 3; i++){
+			for (int j = boxStartCol; j < boxStartCol + 3; j++) {
+				toCheck [index] = board [i, j];
+				index++; 
+			}
+		}
+
+		toSpin.UnionWith (CheckCompleteHelper (toCheck));
+
+		Cell[] toSpinArray = new Cell[toSpin.Count];
+		toSpin.CopyTo (toSpinArray);
+		foreach (Cell c in toSpinArray){
+			c.GetComponent<Cell>().Spinning = true;
+		}
+
+	}
+
+	//returns a set of cells that are complete
+	private HashSet<Cell> CheckCompleteHelper(GameObject[] toCheck){
+		HashSet<Cell> tempCells = new HashSet<Cell> ();
+		Cell curCell; 
+
+		for (int i = 0; i < toCheck.Length; i++){
+			curCell = toCheck [i].GetComponent<Cell>();
+			if (curCell.Val < 0) {
+				//not complete, return empty set
+				tempCells.Clear ();
+				break;
+			}
+			tempCells.Add (curCell);
+		}
+		return tempCells;
 	}
 
 
