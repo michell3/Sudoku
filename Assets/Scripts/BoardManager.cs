@@ -53,6 +53,13 @@ public class BoardManager : MonoBehaviour {
 	// Game state variables
 	public bool isP1 = true;
 	private int numAnimals = 0;
+	private int comebackThreshold = 7;
+
+	public int NumAnimals
+	{
+		get{ return numAnimals; }
+	}
+		
 	private bool isGameOver = false;
 
 	private int randomIndex;
@@ -386,7 +393,11 @@ public class BoardManager : MonoBehaviour {
 		//cant have more than 4 powerups at a time
 		if (powerups.Count >= 4)
 			return;
-		int powerupIndex = Random.Range(0, powerupSprites.Length);
+		int powerupIndex;
+		if (numAnimals + comebackThreshold < enemyBoard.GetComponent<BoardManager> ().NumAnimals)
+			powerupIndex = powerupSprites.Length - 1; // comeback - best powerup in last index
+		else
+			powerupIndex = Random.Range (0, powerupSprites.Length - 1);
 		GameObject p = Instantiate (powerupSprites [powerupIndex], gameObject.transform);
 		powerups.Add (p);
 	}
