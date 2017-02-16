@@ -82,10 +82,10 @@ public class BoardManager : MonoBehaviour {
 	private bool P1justMovedRightTrigger = false;
 	private bool P1justMovedLeftTrigger = false;
 
-	private bool P2justMovedHorizontal = false;
-	private bool P2justMovedVertical = false;
-	private bool P2justMovedRightTrigger = false;
-	private bool P2justMovedLeftTrigger = false;
+//	private bool P2justMovedHorizontal = false;
+//	private bool P2justMovedVertical = false;
+//	private bool P2justMovedRightTrigger = false;
+//	private bool P2justMovedLeftTrigger = false;
 
 	private Dictionary<string, KeyCode> controls;
 
@@ -99,10 +99,10 @@ public class BoardManager : MonoBehaviour {
 		{"left", KeyCode.LeftArrow},
 		{"right", KeyCode.RightArrow},
 		{"place", KeyCode.Space},
-		{"chooseUp", KeyCode.R},
-		{"chooseDown", KeyCode.E},
-		{"lock", KeyCode.LeftShift},
-		{"activate", KeyCode.P}
+		{"chooseDown", KeyCode.Comma},
+		{"chooseUp", KeyCode.Period},
+		{"activate", KeyCode.RightShift},
+		{"cheat", KeyCode.RightControl}
 	};
 
 	Dictionary<string, KeyCode> p1Controls = 
@@ -111,11 +111,11 @@ public class BoardManager : MonoBehaviour {
 		{"left", KeyCode.A},
 		{"down", KeyCode.S},
 		{"right", KeyCode.D},
-		{"place", KeyCode.U},
-		{"chooseUp", KeyCode.N},
-		{"chooseDown", KeyCode.M},
-		{"lock", KeyCode.RightShift},
-		{"activate", KeyCode.Y}
+		{"place", KeyCode.F},
+		{"chooseDown", KeyCode.Z},
+		{"chooseUp", KeyCode.X},
+		{"activate", KeyCode.LeftShift},
+		{"cheat", KeyCode.LeftControl}
 	};
 
 	void Awake () {
@@ -577,7 +577,7 @@ public class BoardManager : MonoBehaviour {
 				GainPowerUp ();
 			}
 
-			if (Input.GetKeyDown (controls ["lock"])) {
+			if (Input.GetKeyDown (controls ["cheat"])) {
 				GainPowerUp ();
 			}
 		}
@@ -621,7 +621,7 @@ public class BoardManager : MonoBehaviour {
 				GainPowerUp ();
 			}
 
-			if (Input.GetKeyDown (controls ["lock"])) {
+			if (Input.GetKeyDown (controls ["cheat"])) {
 				GainPowerUp ();
 			}
 		}
