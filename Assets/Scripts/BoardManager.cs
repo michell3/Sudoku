@@ -240,7 +240,6 @@ public class BoardManager : MonoBehaviour {
 		selectSprite (false); // deselect current sprite
 		pointerNum = ((rows + pointerNum + move) % rows); 
 		selectSprite(true); // select new sprite
-	
 	}
 
 	private void selectSprite(bool select) {
@@ -387,7 +386,7 @@ public class BoardManager : MonoBehaviour {
 		//cant have more than 4 powerups at a time
 		if (powerups.Count >= 4)
 			return;
-		int powerupIndex = Random.Range(0, powerupSprites.Length); 
+		int powerupIndex = Random.Range(0, powerupSprites.Length);
 		GameObject p = Instantiate (powerupSprites [powerupIndex], gameObject.transform);
 		powerups.Add (p);
 	}

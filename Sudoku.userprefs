@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
   <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/BoardManager.cs">
@@ -16,4 +17,20 @@
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+=======
+﻿<Properties StartupItem="Assembly-CSharp.csproj">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\DanceBehavior.cs">
+    <Files>
+      <File FileName="Assets\Scripts\BoardManager.cs" Line="518" Column="35" />
+      <File FileName="Assets\Scripts\DanceBehavior.cs" Line="44" Column="86" />
+      <File FileName="Assets\Scripts\InkDestruction.cs" Line="6" Column="31" />
+      <File FileName="Assets\Scripts\Cell.cs" Line="80" Column="21" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+>>>>>>> 955ea5470cda212f6591abb2a627bc801b7be895
 </Properties>

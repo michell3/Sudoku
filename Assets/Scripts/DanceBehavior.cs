@@ -11,7 +11,7 @@ public class DanceBehavior : MonoBehaviour {
 	private float timeInterval;
 
 	private float timer;
-	private float tempTimer;
+//	private float tempTimer;
 	private float direction;
 
 	private bool spinning; 
@@ -20,7 +20,7 @@ public class DanceBehavior : MonoBehaviour {
 		get{ return spinning; }
 		set{ 
 			spinning = value;
-			tempTimer = timer;
+//			tempTimer = timer;
 			timer = SpinInterval;
 		}
 	}
