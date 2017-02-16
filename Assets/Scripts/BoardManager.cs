@@ -82,10 +82,10 @@ public class BoardManager : MonoBehaviour {
 	private bool P1justMovedRightTrigger = false;
 	private bool P1justMovedLeftTrigger = false;
 
-//	private bool P2justMovedHorizontal = false;
-//	private bool P2justMovedVertical = false;
-//	private bool P2justMovedRightTrigger = false;
-//	private bool P2justMovedLeftTrigger = false;
+	private bool P2justMovedHorizontal = false;
+	private bool P2justMovedVertical = false;
+	private bool P2justMovedRightTrigger = false;
+	private bool P2justMovedLeftTrigger = false;
 
 	private Dictionary<string, KeyCode> controls;
 
