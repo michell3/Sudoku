@@ -89,10 +89,10 @@ public class BoardManager : MonoBehaviour {
 	private bool P1justMovedRightTrigger = false;
 	private bool P1justMovedLeftTrigger = false;
 
-//	private bool P2justMovedHorizontal = false;
-//	private bool P2justMovedVertical = false;
-//	private bool P2justMovedRightTrigger = false;
-//	private bool P2justMovedLeftTrigger = false;
+	private bool P2justMovedHorizontal = false;
+	private bool P2justMovedVertical = false;
+	private bool P2justMovedRightTrigger = false;
+	private bool P2justMovedLeftTrigger = false;
 
 	private Dictionary<string, KeyCode> controls;
 
@@ -368,10 +368,13 @@ public class BoardManager : MonoBehaviour {
 	private void animalDescend() {
 		List<GameObject> copyList = new List<GameObject> (descendList);
 		foreach (GameObject animal in copyList) {
-			animal.transform.Translate (0, -.1f, 0);
-			if (animal.transform.position.y < -6) {
-				descendList.Remove (animal);
-				Destroy (animal);
+			if(animal != null)
+			{
+				animal.transform.Translate (0, -.1f, 0);
+				if (animal.transform.position.y < -6) {
+					descendList.Remove (animal);
+					Destroy (animal);
+				}
 			}
 		}
 	}
@@ -527,10 +530,10 @@ public class BoardManager : MonoBehaviour {
 			}
 
 			//scrolling through sprites to place
-			if (Input.GetAxis ("Left_Trigger") > .8f && !P1justMovedLeftTrigger) {
+			if ((Input.GetAxis ("Left_Trigger") > .8f || Input.GetAxis ("PC_Left_Trigger") > .8f) && !P1justMovedLeftTrigger) {
 				P1justMovedLeftTrigger = true;
 				choosePointerNum (-1);
-			} else if (Input.GetAxis ("Right_Trigger") > .8f && !P1justMovedRightTrigger) {
+			} else if ((Input.GetAxis ("Right_Trigger") > .8f || Input.GetAxis ("PC_Right_Trigger") > .8f) && !P1justMovedRightTrigger) {
 				P1justMovedRightTrigger = true;
 				choosePointerNum (1);
 			}	
@@ -548,6 +551,9 @@ public class BoardManager : MonoBehaviour {
 				powerups.Remove (temp); //delete and destroy powerup
 				Destroy (temp); 
 			} 
+
+			if (Input.GetButtonDown ("B_Button"))
+				SceneManager.LoadScene ("Splash_Screen");
 
 			if (TimerBar.GetComponent<Timer> ().IsPoweredUp () == true) {
 				GainPowerUp ();
@@ -594,11 +600,69 @@ public class BoardManager : MonoBehaviour {
 			if (Input.GetKeyDown (controls ["cheat"])) {
 				GainPowerUp ();
 			}
+
 		}
 	}
 
 	private void P2XBoxControls() {
 		if (!isP1) {
+			//CONTROLLER INPUTS
+			//movement around the grid using Analog Stick
+			if (Input.GetAxis ("PC_J_MainHorizontal") > .5 && !P2justMovedHorizontal) {
+				P2justMovedHorizontal = true;
+				Select (pointerRow, pointerCol + 1);
+			} else if (Input.GetAxis ("PC_J_MainHorizontal") < -.5 && !P2justMovedHorizontal) {
+				P2justMovedHorizontal = true;
+				Select (pointerRow, pointerCol - 1);
+			} else if (Input.GetAxis ("PC_J_MainVertical") > .5 && !P2justMovedVertical) {
+				P2justMovedVertical = true;
+				Select (pointerRow + 1, pointerCol);
+			} else if (Input.GetAxis ("PC_J_MainVertical") < -.5 && !P2justMovedVertical) {
+				P2justMovedVertical = true;
+				Select (pointerRow - 1, pointerCol);
+			}
+
+			//reset analog stick so you can move again
+			if (Input.GetAxis ("PC_J_MainHorizontal") == 0)
+				P2justMovedHorizontal = false;
+			if (Input.GetAxis ("PC_J_MainVertical") == 0)
+				P2justMovedVertical = false;
+
+			//placing the sprites
+			if (Input.GetButtonDown ("PC_A_Button")) {
+				Handheld.Vibrate ();
+				Place ();
+			}
+
+			//scrolling through sprites to place
+			if ((Input.GetAxis ("PC_Left_Trigger") > .8f || Input.GetAxis ("PC_Left_Trigger") > .8f) && !P2justMovedLeftTrigger) {
+				P2justMovedLeftTrigger = true;
+				choosePointerNum (-1);
+			} else if ((Input.GetAxis ("PC_Right_Trigger") > .8f || Input.GetAxis ("PC_Right_Trigger") > .8f) && !P2justMovedRightTrigger) {
+				P2justMovedRightTrigger = true;
+				choosePointerNum (1);
+			}	
+			//reset triggers to be able to be placed again
+			if (Input.GetAxis ("PC_Right_Trigger") < .2f)
+				P2justMovedRightTrigger = false;
+			if (Input.GetAxis ("PC_Left_Trigger") < .2f)
+				P2justMovedLeftTrigger = false;
+
+			//test power-ups
+			if (Input.GetButtonDown ("PC_Y_Button") && powerups.Count > 0 && !stunned)
+			{
+				GameObject temp = powerups [0];
+				((Powerup)temp.GetComponent<Powerup> ()).Activate (cb); //call the activation method for powerup
+				powerups.Remove (temp); //delete and destroy powerup
+				Destroy (temp); 
+			} 
+
+			if (Input.GetButtonDown ("PC_B_Button"))
+				SceneManager.LoadScene ("Splash_Screen");
+
+
+
+			//HARD CODED KEYBOARD INPUTS
 			//moving the selector. 
 			if (Input.GetKeyDown (controls ["down"])) {
 				Select (pointerRow - 1, pointerCol);
