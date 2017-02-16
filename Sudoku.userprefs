@@ -1,14 +1,40 @@
+<<<<<<< HEAD
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/BoardManager.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\BoardManager.cs">
     <Files>
-      <File FileName="Assets/Scripts/BoardManager.cs" Line="635" Column="7" />
-      <File FileName="Assets/Scripts/InkDestruction.cs" Line="1" Column="1" />
-      <File FileName="Assets/Scripts/Cell.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\BoardManager.cs" Line="642" Column="11" />
+      <File FileName="Assets\Scripts\DanceBehavior.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\InkDestruction.cs" Line="6" Column="31" />
+      <File FileName="Assets\Scripts\Cell.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Timer.cs" Line="98" Column="46" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+=======
+﻿<Properties StartupItem="Assembly-CSharp.csproj">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/BoardManager.cs">
+    <Files>
+<<<<<<< HEAD
+      <File FileName="Assets/Scripts/BoardManager.cs" Line="635" Column="7" />
+      <File FileName="Assets/Scripts/InkDestruction.cs" Line="1" Column="1" />
+      <File FileName="Assets/Scripts/Cell.cs" Line="1" Column="1" />
+=======
+      <File FileName="Assets/Scripts/BoardManager.cs" Line="309" Column="59" />
+      <File FileName="Assets/Scripts/CageRattle.cs" Line="11" Column="15" />
+      <File FileName="Assets/Scripts/CharacterBehavior.cs" Line="46" Column="29" />
+      <File FileName="Assets/Scripts/ObjectBehavior.cs" Line="27" Column="16" />
+      <File FileName="Assets/Scripts/DanceBehavior.cs" Line="23" Column="20" />
+>>>>>>> c9355d44c3f7bc1b2cb8567b9e820f5f18ca9944
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+>>>>>>> c226348343e6458db0e99e5c2256417ab87fc10d
 </Properties>
