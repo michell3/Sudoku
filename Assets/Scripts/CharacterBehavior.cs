@@ -21,6 +21,11 @@ public class CharacterBehavior : MonoBehaviour {
 	private float hurtTime;
 	private float hurtTimer = 0f;
 
+	// Sounds
+	public AudioClip HurtAudio;
+	private AudioSource hurtAudio;
+	private AudioSource throwAudio;
+
 	private Animator anim;
 
 	void Awake () {
@@ -35,6 +40,12 @@ public class CharacterBehavior : MonoBehaviour {
 
 		hurtTime = HurtTime;
 		hurtTimer = hurtTime;
+
+		// Sounds
+		hurtAudio = gameObject.AddComponent<AudioSource>();
+		hurtAudio.clip = HurtAudio;
+		throwAudio = gameObject.AddComponent<AudioSource> ();
+		throwAudio.clip = Resources.Load ("select-1.wav") as AudioClip;
 	}
 
 	void Update () {
