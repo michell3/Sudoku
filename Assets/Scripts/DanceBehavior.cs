@@ -24,6 +24,12 @@ public class DanceBehavior : MonoBehaviour {
 			timer = SpinInterval;
 		}
 	}
+	private bool gameover;
+	public bool GameOver
+	{
+		get{ return gameover ; }
+		set{ gameover = value; }
+	}
 
 	void Start () {
 		rotateAmount = RotateAmount;
@@ -44,7 +50,7 @@ public class DanceBehavior : MonoBehaviour {
 			transform.RotateAround(transform.position, Vector3.forward, 360 * Time.deltaTime / SpinInterval);
 
 			//once done spinning 
-			if (timer < 0f) {
+			if (timer < 0f && !gameover) {
 				spinning = false; 
 				transform.rotation = Quaternion.identity;
 				timer = timeInterval;

@@ -459,8 +459,10 @@ public class BoardManager : MonoBehaviour {
 
 		Cell[] toSpinArray = new Cell[toSpin.Count];
 		toSpin.CopyTo (toSpinArray);
+
 		foreach (Cell c in toSpinArray){
 			c.GetComponent<Cell>().Spinning = true;
+			c.GetComponent<Cell>().GameOver = isGameOver;
 		}
 
 	}
@@ -578,7 +580,7 @@ public class BoardManager : MonoBehaviour {
 			}
 
 			if (Input.GetKeyDown (controls ["lock"])) {
-				GainPowerUp ();
+				GameOver (true);
 			}
 		}
 	}
@@ -622,7 +624,7 @@ public class BoardManager : MonoBehaviour {
 			}
 
 			if (Input.GetKeyDown (controls ["lock"])) {
-				GainPowerUp ();
+				GameOver (true);
 			}
 		}
 	}
@@ -636,6 +638,11 @@ public class BoardManager : MonoBehaviour {
 		if (isWinner) {
 			BoardManager enemyBM = enemyBoard.GetComponent<BoardManager> ();
 			enemyBM.GameOver (false);
+
+			//this is just a shitty way of making everything spin on a complete board
+			for (int i = 0; i < rows; i++) {
+				CheckComplete (i, 0);
+			}
 
 			Instantiate (WinBoard);
 			cb.Winner ();
