@@ -2,11 +2,14 @@
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
   <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/BoardManager.cs">
     <Files>
-      <File FileName="Assets/Scripts/BoardManager.cs" Line="319" Column="8" />
+      <File FileName="Assets/Scripts/BoardManager.cs" Line="542" Column="5" />
+      <File FileName="Assets/Scripts/PowerupLion.cs" Line="1" Column="1" />
       <File FileName="Assets/Scripts/Pointer.cs" Line="1" Column="1" />
       <File FileName="Assets/Scripts/Timer.cs" Line="1" Column="1" />
       <File FileName="Assets/Scripts/Cell.cs" Line="1" Column="1" />
-      <File FileName="Assets/Scripts/CageRattle.cs" Line="40" Column="28" />
+      <File FileName="Assets/Scripts/CageRattle.cs" Line="1" Column="1" />
+      <File FileName="Assets/Scripts/PowerupLock.cs" Line="1" Column="1" />
+      <File FileName="Assets/Scripts/CharacterBehavior.cs" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

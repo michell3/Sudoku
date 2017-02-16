@@ -111,11 +111,11 @@ public class BoardManager : MonoBehaviour {
 		{"left", KeyCode.A},
 		{"down", KeyCode.S},
 		{"right", KeyCode.D},
-		{"place", KeyCode.R},
-		{"chooseUp", KeyCode.Y},
-		{"chooseDown", KeyCode.T},
+		{"place", KeyCode.U},
+		{"chooseUp", KeyCode.N},
+		{"chooseDown", KeyCode.M},
 		{"lock", KeyCode.RightShift},
-		{"activate", KeyCode.M}
+		{"activate", KeyCode.Y}
 	};
 
 	void Awake () {
@@ -509,8 +509,10 @@ public class BoardManager : MonoBehaviour {
 				P1justMovedVertical = false;
 
 			//placing the sprites
-			if (Input.GetButtonDown ("A_Button"))
+			if (Input.GetButtonDown ("A_Button")) {
+				Handheld.Vibrate ();
 				Place ();
+			}
 
 			//scrolling through sprites to place
 			if (Input.GetAxis ("Left_Trigger") > .8f && !P1justMovedLeftTrigger) {
@@ -534,6 +536,51 @@ public class BoardManager : MonoBehaviour {
 				powerups.Remove (temp); //delete and destroy powerup
 				Destroy (temp); 
 			} 
+
+			if (TimerBar.GetComponent<Timer> ().IsPoweredUp () == true) {
+				GainPowerUp ();
+			}
+
+
+			//WASD Logic
+			if (Input.GetKeyDown (controls ["down"])) {
+				Select (pointerRow - 1, pointerCol);
+			} else if (Input.GetKeyDown (controls ["up"])) {
+				Select (pointerRow + 1, pointerCol);
+			} else if (Input.GetKeyDown (controls ["left"])) {
+				Select (pointerRow, pointerCol - 1);
+			} else if (Input.GetKeyDown (controls ["right"])) {
+				Select (pointerRow, pointerCol + 1);
+			}
+
+			if (Input.GetKeyDown (controls ["place"])) {
+				Place ();
+			} else if (Input.GetKeyDown (controls ["chooseDown"])) {
+				//make sure to wrap around # of rows/columns, then add 1 since
+				//we are 1-indexing
+				choosePointerNum (-1);
+
+			} else if (Input.GetKeyDown (controls ["chooseUp"])) {
+				//make sure to wrap around # of rows/columns, then add 1 since
+				//we are 1-indexing
+				choosePointerNum (1);
+
+			} else if (Input.GetKeyDown (controls ["activate"]) && 
+				powerups.Count > 0 &&
+				!stunned) {
+				GameObject temp = powerups [0];
+				((Powerup)temp.GetComponent<Powerup> ()).Activate (cb); //call the activation method for powerup
+				powerups.Remove (temp); //delete and destroy powerup
+				Destroy (temp); 
+			}
+
+			if (TimerBar.GetComponent<Timer> ().IsPoweredUp () == true) {
+				GainPowerUp ();
+			}
+
+			if (Input.GetKeyDown (controls ["lock"])) {
+				GainPowerUp ();
+			}
 		}
 	}
 
