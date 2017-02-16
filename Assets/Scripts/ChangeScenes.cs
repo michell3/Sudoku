@@ -1,12 +1,23 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+using UnityEngine.UI;
+using System.Collections;
 using UnityEngine.SceneManagement;
-using UnityEngine.EventSystems;
 
 public class ChangeScenes : MonoBehaviour {
-	
-	public void ChangeToScene (int sceneToChangeTo) {
-		SceneManager.LoadScene(sceneToChangeTo);
+	public Button yourButton;
+	public Sprite yourImage;
+	public string nextScene;
+
+	void Start () {
+		//yourImage = Resources.Load<Sprite>("BTNS");
+		Button btn = yourButton.GetComponent<Button>();
+		btn.onClick.AddListener(TaskOnClick);
+
+	}
+
+	void TaskOnClick(){
+		yourButton.image.sprite = yourImage;
+		SceneManager.LoadScene (nextScene);
+		//Debug.Log ("You have clicked the button!");
 	}
 }
