@@ -91,6 +91,10 @@ public class BoardManager : MonoBehaviour {
 
 	private int[,] answer, show;
 
+	//Back To Menu
+	private int back = 0;
+
+
 	//Define different controls for different players
 	Dictionary<string, KeyCode> p2Controls = 
 		new Dictionary<string, KeyCode> () {
@@ -210,6 +214,8 @@ public class BoardManager : MonoBehaviour {
 
 		if (!isGameOver) {
 
+
+
 			if (!stunned) {
 				P1XBoxControls ();
 				P2XBoxControls ();
@@ -223,6 +229,10 @@ public class BoardManager : MonoBehaviour {
 		} else {
 			// GameOver UI controls should be implemented here
 		}
+	}
+
+	public int backToMenu(){
+		return back;
 	}
 
 	private void updatePowerupBar() {
@@ -544,6 +554,8 @@ public class BoardManager : MonoBehaviour {
 
 
 			//WASD Logic
+
+
 			if (Input.GetKeyDown (controls ["down"])) {
 				Select (pointerRow - 1, pointerCol);
 			} else if (Input.GetKeyDown (controls ["up"])) {
@@ -588,6 +600,7 @@ public class BoardManager : MonoBehaviour {
 
 	private void P2XBoxControls() {
 		if (!isP1) {
+
 			//moving the selector. 
 			if (Input.GetKeyDown (controls ["down"])) {
 				Select (pointerRow - 1, pointerCol);
