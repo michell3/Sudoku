@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class InkDestruction : MonoBehaviour {
-	private float startTime = 7.5f;
-	private float fadeDuration = 1.0f;
+	private float startTime = 12.5f;
+	private float fadeDuration = 2.5f;
 	private Color lerpedColor; 
 	private float t; 
 	void Start(){
