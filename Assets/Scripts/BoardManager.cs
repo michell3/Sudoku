@@ -569,10 +569,10 @@ public class BoardManager : MonoBehaviour {
 
 			//placing the sprites
 			if (Input.GetButtonDown ("A_Button")) {
-				Handheld.Vibrate ();
+				
 				Place ();
 			}
-
+				
 			//scrolling through sprites to place
 			if ((Input.GetAxis ("Left_Trigger") > .8f) && !P1justMovedLeftTrigger) {
 				P1justMovedLeftTrigger = true;
@@ -648,48 +648,48 @@ public class BoardManager : MonoBehaviour {
 
 			//CONTROLLER INPUTS
 			//movement around the grid using Analog Stick
-			if (Input.GetAxis ("PC_J_MainHorizontal") > .5 && !P2justMovedHorizontal) {
+			if (Input.GetAxis ("P2_J_MainHorizontal") > .5 && !P2justMovedHorizontal) {
 				P2justMovedHorizontal = true;
 				Select (pointerRow, pointerCol + 1);
-			} else if (Input.GetAxis ("PC_J_MainHorizontal") < -.5 && !P2justMovedHorizontal) {
+			} else if (Input.GetAxis ("P2_J_MainHorizontal") < -.5 && !P2justMovedHorizontal) {
 				P2justMovedHorizontal = true;
 				Select (pointerRow, pointerCol - 1);
-			} else if (Input.GetAxis ("PC_J_MainVertical") > .5 && !P2justMovedVertical) {
+			} else if (Input.GetAxis ("P2_J_MainVertical") > .5 && !P2justMovedVertical) {
 				P2justMovedVertical = true;
 				Select (pointerRow + 1, pointerCol);
-			} else if (Input.GetAxis ("PC_J_MainVertical") < -.5 && !P2justMovedVertical) {
+			} else if (Input.GetAxis ("P2_J_MainVertical") < -.5 && !P2justMovedVertical) {
 				P2justMovedVertical = true;
 				Select (pointerRow - 1, pointerCol);
 			}
 
 			//reset analog stick so you can move again
-			if (Input.GetAxis ("PC_J_MainHorizontal") == 0)
+			if (Input.GetAxis ("P2_J_MainHorizontal") == 0)
 				P2justMovedHorizontal = false;
-			if (Input.GetAxis ("PC_J_MainVertical") == 0)
+			if (Input.GetAxis ("P2_J_MainVertical") == 0)
 				P2justMovedVertical = false;
 
 			//placing the sprites
-			if (Input.GetButtonDown ("PC_A_Button")) {
-				Handheld.Vibrate ();
+			if (Input.GetButtonDown ("P2_A_Button")) {
+				
 				Place ();
 			}
 
 			//scrolling through sprites to place
-			if ((Input.GetAxis ("PC_Left_Trigger") > .8f) && !P2justMovedLeftTrigger) {
+			if ((Input.GetAxis ("P2_Left_Trigger") > .8f) && !P2justMovedLeftTrigger) {
 				P2justMovedLeftTrigger = true;
 				choosePointerNum (-1);
-			} else if ((Input.GetAxis ("PC_Right_Trigger") > .8f) && !P2justMovedRightTrigger) {
+			} else if ((Input.GetAxis ("P2_Right_Trigger") > .8f) && !P2justMovedRightTrigger) {
 				P2justMovedRightTrigger = true;
 				choosePointerNum (1);
 			}	
 			//reset triggers to be able to be placed again
-			if (Input.GetAxis ("PC_Right_Trigger") == 0)
+			if (Input.GetAxis ("P2_Right_Trigger") == 0)
 				P2justMovedRightTrigger = false;
-			if (Input.GetAxis ("PC_Left_Trigger") == 0)
+			if (Input.GetAxis ("P2_Left_Trigger") == 0)
 				P2justMovedLeftTrigger = false;
 
 			//test power-ups
-			if (Input.GetButtonDown ("PC_X_Button") && myPowerups.Count > 0 && !stunned)
+			if (Input.GetButtonDown ("P2_X_Button") && myPowerups.Count > 0 && !stunned)
 			{
 				GameObject temp = myPowerups [0];
 				((Powerup)temp.GetComponent<Powerup> ()).Activate (cb); //call the activation method for powerup
@@ -697,8 +697,9 @@ public class BoardManager : MonoBehaviour {
 				Destroy (temp); 
 			} 
 
-			if (Input.GetButtonDown ("PC_B_Button"))
+			if (Input.GetButtonDown ("P2_B_Button"))
 				SceneManager.LoadScene ("Splash_Screen");
+
 
 			//HARD CODED KEYBOARD INPUTS
 			//moving the selector. 
@@ -734,12 +735,10 @@ public class BoardManager : MonoBehaviour {
 			}
 
 			if (TimerBar.GetComponent<Timer> ().IsPoweredUp () == true) {
-				powerupAudio.Play ();
 				GainPowerUp ();
 			}
 				
 			if (Input.GetKeyDown (controls ["cheat"])) {
-				powerupAudio.Play ();
 				GainPowerUp ();
 			}
 		}
