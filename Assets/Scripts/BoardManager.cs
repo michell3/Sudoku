@@ -29,6 +29,16 @@ public class BoardManager : MonoBehaviour {
 	public GameObject LoseBoard;
 	public GameObject WinBoard;
 
+	// Sound
+	public AudioClip SelectAudio;
+	private AudioSource selectAudio;
+	public AudioClip PlaceAudio;
+	private AudioSource placeAudio;
+	public AudioClip CompleteAudio;
+	private AudioSource completeAudio;
+	public AudioClip PowerupAudio;
+	private AudioSource powerupAudio;
+
 	// Grid variables
 	public int columns = 9;
 	public int rows = 9;
@@ -102,7 +112,6 @@ public class BoardManager : MonoBehaviour {
 	//Back To Menu
 	private int back = 0;
 
-
 	//Define different controls for different players
 	Dictionary<string, KeyCode> p2Controls = 
 		new Dictionary<string, KeyCode> () {
@@ -153,6 +162,16 @@ public class BoardManager : MonoBehaviour {
 		spriteHeight = sampleSprite.GetComponent<SpriteRenderer>().bounds.size.y;
 
 		DisplayBoard ();
+
+		// Sound
+		selectAudio = gameObject.AddComponent<AudioSource>();
+		selectAudio.clip = SelectAudio;
+		placeAudio = gameObject.AddComponent<AudioSource>();
+		placeAudio.clip = PlaceAudio;
+		completeAudio = gameObject.AddComponent<AudioSource>();
+		completeAudio.clip = CompleteAudio;
+		powerupAudio = gameObject.AddComponent<AudioSource>();
+		powerupAudio.clip = PowerupAudio;
 
 		// Player controls
 		if (isP1)
@@ -214,6 +233,11 @@ public class BoardManager : MonoBehaviour {
 		pointer.transform.position = selectedCell.transform.position;
 		pointerCol = col;
 		pointerRow = row;
+
+		//play sound
+		if (selectAudio) {
+			selectAudio.Play ();
+		}
 	}
 
 	void Update() {
@@ -221,8 +245,6 @@ public class BoardManager : MonoBehaviour {
 		animalDescend ();
 
 		if (!isGameOver) {
-
-
 
 			if (!stunned) {
 				P1XBoxControls ();
@@ -234,8 +256,6 @@ public class BoardManager : MonoBehaviour {
 					stunned = false;
 			}
 			updatePowerupBar ();
-		} else {
-			// GameOver UI controls should be implemented here
 		}
 	}
 
@@ -258,6 +278,9 @@ public class BoardManager : MonoBehaviour {
 		selectSprite (false); // deselect current sprite
 		pointerNum = ((rows + pointerNum + move) % rows); 
 		selectSprite(true); // select new sprite
+
+		// Play sound
+		selectAudio.Play();
 	}
 
 	private void selectSprite(bool select) {
@@ -436,6 +459,9 @@ public class BoardManager : MonoBehaviour {
 
 			numAnimals++;
 
+			// Play sound
+			placeAudio.Play();
+
 			if (numAnimals == 81) {
 				GameOver (true);
 			}
@@ -493,6 +519,10 @@ public class BoardManager : MonoBehaviour {
 			c.GetComponent<Cell>().GameOver = isGameOver;
 		}
 
+		// Play sound
+		if (toSpin.Count > 0) {
+			completeAudio.Play ();
+		}
 	}
 
 	//returns a set of cells that are complete
@@ -569,10 +599,7 @@ public class BoardManager : MonoBehaviour {
 			if (Input.GetButtonDown ("B_Button"))
 				SceneManager.LoadScene ("Splash_Screen");
 
-
 			//WASD Logic
-
-
 			if (Input.GetKeyDown (controls ["down"])) {
 				Select (pointerRow - 1, pointerCol);
 			} else if (Input.GetKeyDown (controls ["up"])) {
@@ -605,14 +632,14 @@ public class BoardManager : MonoBehaviour {
 			}
 
 			if (TimerBar.GetComponent<Timer> ().IsPoweredUp () == true) {
+				powerupAudio.Play ();
 				GainPowerUp ();
 			}
-
 
 			if (Input.GetKeyDown (controls ["cheat"])) {
+				powerupAudio.Play ();
 				GainPowerUp ();
 			}
-
 		}
 	}
 
@@ -673,8 +700,6 @@ public class BoardManager : MonoBehaviour {
 			if (Input.GetButtonDown ("PC_B_Button"))
 				SceneManager.LoadScene ("Splash_Screen");
 
-
-
 			//HARD CODED KEYBOARD INPUTS
 			//moving the selector. 
 			if (Input.GetKeyDown (controls ["down"])) {
@@ -709,10 +734,12 @@ public class BoardManager : MonoBehaviour {
 			}
 
 			if (TimerBar.GetComponent<Timer> ().IsPoweredUp () == true) {
+				powerupAudio.Play ();
 				GainPowerUp ();
 			}
 				
 			if (Input.GetKeyDown (controls ["cheat"])) {
+				powerupAudio.Play ();
 				GainPowerUp ();
 			}
 		}
