@@ -166,6 +166,7 @@ public class BoardManager : MonoBehaviour {
 		// Sound
 		selectAudio = gameObject.AddComponent<AudioSource>();
 		selectAudio.clip = SelectAudio;
+		selectAudio.volume = 0.2f;
 		placeAudio = gameObject.AddComponent<AudioSource>();
 		placeAudio.clip = PlaceAudio;
 		completeAudio = gameObject.AddComponent<AudioSource>();
@@ -346,6 +347,7 @@ public class BoardManager : MonoBehaviour {
 			GameObject gridLock = Instantiate (lockPrefab);
 			gridLock.transform.position = (board [randomRow,
 				randomCol].GetComponent<Cell> ().transform.position);
+			gridLock.transform.parent = transform;
 			lockList.Add (gridLock);
 		}
 	}
@@ -367,6 +369,7 @@ public class BoardManager : MonoBehaviour {
 		GameObject squidInk = Instantiate (inkPrefab);
 		squidInk.transform.position = board [randomRow,
 			randomCol].GetComponent<Cell> ().transform.position;
+		squidInk.transform.parent = transform;
 	}
 
 	// a lion runs across a certain row and scares off all the animals from that row
