@@ -13,6 +13,8 @@ public class BoardManager : MonoBehaviour {
 	public GameObject pointer;
 	public GameObject cell;
 	public GameObject lockPrefab;
+	public GameObject blueCheck;
+	public GameObject redCheck;
 	public GameObject inkPrefab;
 	public List<GameObject> lockList = new List<GameObject>();
 	private List<GameObject> descendList = new List<GameObject> ();
@@ -105,6 +107,12 @@ public class BoardManager : MonoBehaviour {
 	private bool P2justMovedRightTrigger = false;
 	private bool P2justMovedLeftTrigger = false;
 
+	private List<bool> numberFinishList = new List<bool>();
+	private List<GameObject> checkList = new List<GameObject>();
+		
+
+
+
 	private Dictionary<string, KeyCode> controls;
 
 	private int[,] answer, show;
@@ -162,6 +170,11 @@ public class BoardManager : MonoBehaviour {
 		spriteHeight = sampleSprite.GetComponent<SpriteRenderer>().bounds.size.y;
 
 		DisplayBoard ();
+
+		//booleans to determine whether or not animals are done being placed or not
+		for(int i = 0; i < 9; i++){
+			numberFinishList.Add (false);
+		}
 
 		// Sound
 		selectAudio = gameObject.AddComponent<AudioSource>();
@@ -257,6 +270,9 @@ public class BoardManager : MonoBehaviour {
 			}
 			updatePowerupBar ();
 		}
+
+		//checks to see whether a number is used up or not
+		animalCrossout();
 	}
 
 	public int backToMenu(){
@@ -277,10 +293,43 @@ public class BoardManager : MonoBehaviour {
 	
 		selectSprite (false); // deselect current sprite
 		pointerNum = ((rows + pointerNum + move) % rows); 
+		while (numberFinishList [pointerNum] == true)
+			pointerNum = ((rows + pointerNum + move) % rows);
 		selectSprite(true); // select new sprite
 
 		// Play sound
 		selectAudio.Play();
+	}
+
+	//crosses out numbers when you are done with them
+	private void animalCrossout()
+	{
+		//Destroy (numberBar.transform.GetChild(num).gameObject);
+		for (int num = 0; num < 9; num++) {
+			if (specificAnimalCount (num) == 9) {
+				if (isP1 && numberFinishList [num] == false) {
+					numberFinishList [num] = true;
+					GameObject check = Instantiate (blueCheck);
+					check.transform.position = numberBar.transform.GetChild (num).gameObject.transform.position;
+					checkList.Add (check);
+				} else if (!isP1 && numberFinishList [num] == false) {
+					numberFinishList [num] = true;
+					GameObject check = Instantiate (redCheck);
+					check.transform.position = numberBar.transform.GetChild (num).gameObject.transform.position;
+					checkList.Add (check);
+				}	
+			} 
+			//Destroys checks if the lion scares off animals that were completed
+			else {
+				numberFinishList [num] = false;
+				foreach(GameObject check in checkList){
+					if (check.transform.position == numberBar.transform.GetChild (num).gameObject.transform.position) {
+						checkList.Remove (check);
+						Destroy (check);
+							}
+						}
+					}
+				}
 	}
 
 	private void selectSprite(bool select) {
@@ -316,7 +365,7 @@ public class BoardManager : MonoBehaviour {
 	}
 
 	//counts how many animals are placed on the board
-	private int animalCount() {
+	private int totalAnimalCount() {
 	
 		int animals = 0;
 		for(int r = 0; r < 9; r++) {
@@ -327,6 +376,20 @@ public class BoardManager : MonoBehaviour {
 		}
 		return animals;
 	}
+
+	//counts the amount of a specific animal on a board
+	private int specificAnimalCount(int animalNumber)
+	{
+		int animalCount = 0;
+		for(int r = 0; r < 9; r++) {
+			for(int c = 0; c < 9; c++) {
+				if (board [r, c].GetComponent<Cell> ().Val == animalNumber)
+					animalCount += 1;
+			}
+		}
+		return animalCount;
+	}
+
 
 	// locks the grid cell that is selected
 	public void LockGridCell() {
@@ -372,14 +435,14 @@ public class BoardManager : MonoBehaviour {
 	// a lion runs across a certain row and scares off all the animals from that row
 	public void LionScare() {
 	
-		if (animalCount() < 5)
-			lionScareCount = animalCount ();
+		if (totalAnimalCount() < 5)
+			lionScareCount = totalAnimalCount ();
 		else
 			lionScareCount = 5;
 
 		numAnimals -= lionScareCount;
 
-		if (animalCount () != 0) {
+		if (totalAnimalCount () != 0) {
 		
 			while (lionScareCount > 0) {
 				randomRow = Random.Range (0, 9);
