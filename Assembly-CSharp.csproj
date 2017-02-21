@@ -60,6 +60,7 @@
      <Compile Include="Assets\Scripts\InputManager.cs" />
      <Compile Include="Assets\Scripts\ObjectBehavior.cs" />
      <Compile Include="Assets\Scripts\Pointer.cs" />
+     <Compile Include="Assets\Scripts\PointerBox.cs" />
      <Compile Include="Assets\Scripts\Powerup.cs" />
      <Compile Include="Assets\Scripts\PowerupDart.cs" />
      <Compile Include="Assets\Scripts\PowerupLion.cs" />

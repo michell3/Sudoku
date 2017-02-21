@@ -5,13 +5,18 @@ using UnityEngine;
 public class DanceBehavior : MonoBehaviour {
 
 	public float RotateAmount = 4f;
-	public float TimeInterval = 0.3f;
+	private float TimeInterval = 0.3f;
 	public float SpinInterval = 1.0f; 
+	public float WiggleTime = 3.0f; 
+	public bool alwaysWiggle = false;
+
+
+
 	private float rotateAmount;
 	private float timeInterval;
 
 	private float timer;
-//	private float tempTimer;
+	private float wiggleTimer;
 	private float direction;
 
 	private bool spinning; 
@@ -40,14 +45,18 @@ public class DanceBehavior : MonoBehaviour {
 
 		transform.Rotate (0f, 0f, direction * rotateAmount);
 		direction *= -1;
+
+		wiggleTimer = WiggleTime;
 	}
 
 	void Update () {
 		
 		timer -= Time.deltaTime;
+		if (!alwaysWiggle)
+			wiggleTimer -= Time.deltaTime;
 
 		if (spinning) {
-			transform.RotateAround(transform.position, Vector3.forward, 360 * Time.deltaTime / SpinInterval);
+			transform.RotateAround (transform.position, Vector3.forward, 360 * Time.deltaTime / SpinInterval);
 
 			//once done spinning 
 			if (timer < 0f && !gameover) {
@@ -55,11 +64,11 @@ public class DanceBehavior : MonoBehaviour {
 				transform.rotation = Quaternion.identity;
 				timer = timeInterval;
 			}
-		}
-		else if (timer < 0f) {
+		} else if (timer < 0f && wiggleTimer >= 0f) {
 			transform.Rotate (0f, 0f, 2f * direction * rotateAmount);
 			timer = timeInterval;
 			direction *= -1f;
-		}
+		} else if (wiggleTimer < 0f)
+			transform.rotation = Quaternion.identity;
 	}
 }
