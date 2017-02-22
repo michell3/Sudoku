@@ -1,6 +1,7 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
 <<<<<<< HEAD
+<<<<<<< HEAD
   <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/DanceBehavior.cs">
     <Files>
       <File FileName="Assets/Scripts/BoardManager.cs" Line="729" Column="18" />
@@ -16,6 +17,9 @@
 >>>>>>> b6f9db20b230491614672cb58bb4abed64665474
     </Files>
   </MonoDevelop.Ide.Workbench>
+=======
+  <MonoDevelop.Ide.Workbench />
+>>>>>>> 1b41f0536282a1abe4b07f95a4e5558cfa7a1d2f
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
