@@ -1,6 +1,18 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
 <<<<<<< HEAD
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/QuitScript.cs">
+    <Files>
+      <File FileName="Assets/Scripts/BoardManager.cs" Line="512" Column="20" />
+      <File FileName="Assets/Scripts/Cell.cs" Line="16" Column="32" />
+      <File FileName="Assets/Scripts/AnimalBehavior.cs" Line="1" Column="1" />
+      <File FileName="Assets/Scripts/DanceBehavior.cs" Line="1" Column="1" />
+      <File FileName="Assets/Scripts/ChangeScenes.cs" Line="1" Column="1" />
+      <File FileName="Assets/Scripts/QuitScript.cs" Line="17" Column="8" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+=======
+<<<<<<< HEAD
 <<<<<<< HEAD
   <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/DanceBehavior.cs">
     <Files>
@@ -20,6 +32,7 @@
 =======
   <MonoDevelop.Ide.Workbench />
 >>>>>>> 1b41f0536282a1abe4b07f95a4e5558cfa7a1d2f
+>>>>>>> 8b06e45c9a45b2e8550a04d5c940742e05ed211b
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
