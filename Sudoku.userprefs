@@ -1,38 +1,10 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-<<<<<<< HEAD
   <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/QuitScript.cs">
     <Files>
-      <File FileName="Assets/Scripts/BoardManager.cs" Line="512" Column="20" />
-      <File FileName="Assets/Scripts/Cell.cs" Line="16" Column="32" />
-      <File FileName="Assets/Scripts/AnimalBehavior.cs" Line="1" Column="1" />
-      <File FileName="Assets/Scripts/DanceBehavior.cs" Line="1" Column="1" />
-      <File FileName="Assets/Scripts/ChangeScenes.cs" Line="1" Column="1" />
-      <File FileName="Assets/Scripts/QuitScript.cs" Line="17" Column="8" />
+      <File FileName="Assets/Scripts/QuitScript.cs" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
-=======
-<<<<<<< HEAD
-<<<<<<< HEAD
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/DanceBehavior.cs">
-    <Files>
-      <File FileName="Assets/Scripts/BoardManager.cs" Line="729" Column="18" />
-      <File FileName="Assets/Scripts/DanceBehavior.cs" Line="56" Column="4" />
-      <File FileName="Assets/Scripts/Pointer.cs" Line="1" Column="1" />
-      <File FileName="Assets/Scripts/PointerBox.cs" Line="16" Column="40" />
-=======
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/BoardManager.cs">
-    <Files>
-      <File FileName="Assets/Scripts/BoardManager.cs" Line="329" Column="8" />
-      <File FileName="Assets/Scripts/Pointer.cs" Line="31" Column="47" />
-      <File FileName="Assets/Scripts/Cell.cs" Line="1" Column="1" />
->>>>>>> b6f9db20b230491614672cb58bb4abed64665474
-    </Files>
-  </MonoDevelop.Ide.Workbench>
-=======
-  <MonoDevelop.Ide.Workbench />
->>>>>>> 1b41f0536282a1abe4b07f95a4e5558cfa7a1d2f
->>>>>>> 8b06e45c9a45b2e8550a04d5c940742e05ed211b
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
